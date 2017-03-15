@@ -169,7 +169,9 @@ void Widget::requestFocus() {
     Widget *widget = this;
     while (widget->parent())
         widget = widget->parent();
-    ((Screen *) widget)->updateFocus(this);
+    Screen *screen = dynamic_cast<Screen *>(widget);
+    if (screen)
+        screen->updateFocus(this);
 }
 
 void Widget::draw(NVGcontext *ctx) {

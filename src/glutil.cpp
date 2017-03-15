@@ -52,8 +52,10 @@ static GLuint createShader_helper(GLint type, const std::string &name,
             std::cerr << "vertex shader";
         else if (type == GL_FRAGMENT_SHADER)
             std::cerr << "fragment shader";
+#if !defined(NANOGUI_FAKEGLFW)
         else if (type == GL_GEOMETRY_SHADER)
             std::cerr << "geometry shader";
+#endif
         std::cerr << " \"" << name << "\":" << std::endl;
         std::cerr << shader_string << std::endl << std::endl;
         glGetShaderInfoLog(id, 512, nullptr, buffer);
@@ -91,12 +93,16 @@ bool GLShader::init(const std::string &name,
     for (auto def : mDefinitions)
         defines += std::string("#define ") + def.first + std::string(" ") + def.second + "\n";
 
+#if !defined(NANOGUI_FAKEGLFW)
     glGenVertexArrays(1, &mVertexArrayObject);
+#endif
     mName = name;
     mVertexShader =
         createShader_helper(GL_VERTEX_SHADER, name, defines, vertex_str);
+#if !defined(NANOGUI_FAKEGLFW)
     mGeometryShader =
         createShader_helper(GL_GEOMETRY_SHADER, name, defines, geometry_str);
+#endif
     mFragmentShader =
         createShader_helper(GL_FRAGMENT_SHADER, name, defines, fragment_str);
 
@@ -131,7 +137,9 @@ bool GLShader::init(const std::string &name,
 
 void GLShader::bind() {
     glUseProgram(mProgramShader);
+#if !defined(NANOGUI_FAKEGLFW)
     glBindVertexArray(mVertexArrayObject);
+#endif
 }
 
 GLint GLShader::attrib(const std::string &name, bool warn) const {
@@ -273,8 +281,10 @@ void GLShader::free() {
     for (auto &buf: mBufferObjects)
         glDeleteBuffers(1, &buf.second.id);
 
+#if !defined(NANOGUI_FAKEGLFW)
     if (mVertexArrayObject)
         glDeleteVertexArrays(1, &mVertexArrayObject);
+#endif
 
     glDeleteProgram(mProgramShader); mProgramShader = 0;
     glDeleteShader(mVertexShader);   mVertexShader = 0;

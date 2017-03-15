@@ -25,7 +25,7 @@ NAMESPACE_BEGIN(nanogui)
 class NANOGUI_EXPORT Popup : public Window {
 public:
     /// Create a new popup parented to a screen (first argument) and a parent window
-    Popup(Widget *parent, Window *parentWindow);
+    Popup(Widget *parent, Window *parentWindow, bool showArrow = true);
 
     /// Return the anchor position in the parent window; the placement of the popup is relative to it
     void setAnchorPos(const Vector2i &anchorPos) { mAnchorPos = anchorPos; }
@@ -60,6 +60,7 @@ protected:
     Window *mParentWindow;
     Vector2i mAnchorPos;
     int mAnchorHeight;
+    bool mShowArrow;
 };
 
 NAMESPACE_END(nanogui)

@@ -8,11 +8,15 @@ if(NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw/src")
     "by calling \"git submodule update --init --recursive\"")
 endif()
 
-option(NANOGUI_BUILD_EXAMPLE "Build NanoGUI example application?" ON)
-option(NANOGUI_BUILD_SHARED  "Build NanoGUI as a shared library?" ON)
-option(NANOGUI_BUILD_PYTHON  "Build a Python plugin for NanoGUI?" ON)
-set(NANOGUI_PYTHON_VERSION "" CACHE STRING "Python version to use for compiling the Python plugin")
+option(NANOGUI_FAKEGLFW "Enable FakeGLFW?" ON)
 option(NANOGUI_DISABLE_SERIALIZATION "Disable NanoGUI serialisation?" ON)
+option(NANOGUI_BUILD_SHARED  "Build NanoGUI as a shared library?" ON)
+
+if (NOT NANOGUI_FAKEGLFW)
+    option(NANOGUI_BUILD_EXAMPLE "Build NanoGUI example application?" ON)
+    option(NANOGUI_BUILD_PYTHON  "Build a Python plugin for NanoGUI?" ON)
+    set(NANOGUI_PYTHON_VERSION "" CACHE STRING "Python version to use for compiling the Python plugin")
+endif()
 
 # Required libraries for linking against nanogui (all targets)
 set(NANOGUI_EXTRA_LIBS "")
@@ -47,7 +51,12 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # Compile GLFW
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw" "ext_build/glfw")
+if (NANOGUI_FAKEGLFW)
+    add_definitions(-DNANOGUI_FAKEGLFW)
+    add_library(glfw_objects OBJECT src/fakeglfw.mm)
+else()
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw" "ext_build/glfw")
+endif()
 
 # Python support: add NANOGUI_PYTHON flag to all targets
 if (NANOGUI_BUILD_PYTHON)

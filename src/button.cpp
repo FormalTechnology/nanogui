@@ -18,11 +18,11 @@
 
 NAMESPACE_BEGIN(nanogui)
 
-Button::Button(Widget *parent, const std::string &caption, int icon)
+Button::Button(Widget *parent, const std::string &caption, int icon, bool centerText)
     : Widget(parent), mCaption(caption), mIcon(icon),
       mIconPosition(IconPosition::LeftCentered), mPushed(false),
       mFlags(NormalButton), mBackgroundColor(Color(0, 0)),
-      mTextColor(Color(0, 0)) { }
+      mTextColor(Color(0, 0)), mCenterText(centerText) { }
 
 Vector2i Button::preferredSize(NVGcontext *ctx) const {
     int fontSize = mFontSize == -1 ? mTheme->mButtonFontSize : mFontSize;
@@ -159,7 +159,9 @@ void Button::draw(NVGcontext *ctx) {
     float tw = nvgTextBounds(ctx, 0,0, mCaption.c_str(), nullptr, nullptr);
 
     Vector2f center = mPos.cast<float>() + mSize.cast<float>() * 0.5f;
-    Vector2f textPos(center.x() - tw * 0.5f, center.y() - 1);
+    Vector2f textPos(mCenterText ? center.x() - tw * 0.5f : mPos.x() + fontSize/2, center.y() - 1);
+    if(!mCenterText)
+        nvgIntersectScissor(ctx, textPos.x(), mPos.y(), mSize.x()-fontSize, mSize.y());
     NVGcolor textColor =
         mTextColor.w() == 0 ? mTheme->mTextColor : mTextColor;
     if (!mEnabled)
@@ -217,6 +219,9 @@ void Button::draw(NVGcontext *ctx) {
     nvgText(ctx, textPos.x(), textPos.y(), mCaption.c_str(), nullptr);
     nvgFillColor(ctx, textColor);
     nvgText(ctx, textPos.x(), textPos.y() + 1, mCaption.c_str(), nullptr);
+
+    if(!mCenterText)
+        nvgResetScissor(ctx);
 }
 
 #if !defined(NANOGUI_DISABLE_SERIALIZATION)

@@ -18,10 +18,10 @@
 #endif
 
 NAMESPACE_BEGIN(nanogui)
-    
-Popup::Popup(Widget *parent, Window *parentWindow)
+
+Popup::Popup(Widget *parent, Window *parentWindow, bool showArrow)
     : Window(parent, ""), mParentWindow(parentWindow),
-      mAnchorPos(Vector2i::Zero()), mAnchorHeight(30) {
+      mAnchorPos(Vector2i::Zero()), mAnchorHeight(30), mShowArrow(showArrow) {
 }
 
 void Popup::performLayout(NVGcontext *ctx) {
@@ -64,9 +64,11 @@ void Popup::draw(NVGcontext* ctx) {
     nvgBeginPath(ctx);
     nvgRoundedRect(ctx, mPos.x(), mPos.y(), mSize.x(), mSize.y(), cr);
 
-    nvgMoveTo(ctx, mPos.x()-15,mPos.y()+mAnchorHeight);
-    nvgLineTo(ctx, mPos.x()+1,mPos.y()+mAnchorHeight-15);
-    nvgLineTo(ctx, mPos.x()+1,mPos.y()+mAnchorHeight+15);
+    if(mShowArrow) {
+        nvgMoveTo(ctx, mPos.x()-15,mPos.y()+mAnchorHeight);
+        nvgLineTo(ctx, mPos.x()+1,mPos.y()+mAnchorHeight-15);
+        nvgLineTo(ctx, mPos.x()+1,mPos.y()+mAnchorHeight+15);
+    }
 
     nvgFillColor(ctx, mTheme->mWindowPopup);
     nvgFill(ctx);

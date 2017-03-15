@@ -25,7 +25,13 @@
     #define GL_GLEXT_PROTOTYPES
 #endif
 
-#include <GLFW/glfw3.h>
+#if defined(NANOGUI_FAKEGLFW)
+    #include <OpenGL/gl.h>
+    #include <nanogui/fakeglfw.h>
+#else
+    #include <GLFW/glfw3.h>
+#endif
+
 #include <nanovg.h>
 
 NAMESPACE_BEGIN(nanogui)

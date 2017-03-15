@@ -36,6 +36,10 @@ void init() {
         setlocale(LC_NUMERIC, "C");
     #endif
 
+#if defined(NANOGUI_FAKEGLFW)
+    createKeyTables();
+    glfwInitTimer();
+#else
     glfwSetErrorCallback(
         [](int error, const char *desc) {
             std::cerr << "GLFW error " << error << ": " << desc << std::endl;
@@ -44,6 +48,7 @@ void init() {
 
     if (!glfwInit())
         throw std::runtime_error("Could not initialize GLFW!");
+#endif
 
     glfwSetTime(0);
 }
@@ -60,11 +65,14 @@ void mainloop() {
             std::chrono::milliseconds time(50);
             while (__mainloop_active) {
                 std::this_thread::sleep_for(time);
+#if !defined(NANOGUI_FAKEGLFW)
                 glfwPostEmptyEvent();
+#endif
             }
         }
     );
 
+#if !defined(NANOGUI_FAKEGLFW)
     try {
         while (__mainloop_active) {
             int numScreens = 0;
@@ -93,6 +101,7 @@ void mainloop() {
         std::cerr << "Caught exception in main loop: " << e.what() << std::endl;
         abort();
     }
+#endif
 
     refresh_thread.join();
 }
@@ -102,7 +111,9 @@ void leave() {
 }
 
 void shutdown() {
+#if !defined(NANOGUI_FAKEGLFW)
     glfwTerminate();
+#endif
 }
 
 std::array<char, 8> utf8(int c) {

@@ -325,7 +325,7 @@ void GridLayout::performLayout(NVGcontext *ctx, Widget *widget) const {
 }
 
 AdvancedGridLayout::AdvancedGridLayout(const std::vector<int> &cols, const std::vector<int> &rows)
- : mCols(cols), mRows(rows) {
+ : mCols(cols), mRows(rows), mMargin(0) {
     mColStretch.resize(mCols.size(), 0);
     mRowStretch.resize(mRows.size(), 0);
 }

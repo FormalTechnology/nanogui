@@ -175,11 +175,11 @@ public:
     /// Check if the widget contains a certain position
     bool contains(const Vector2i &p) const {
         auto d = (p-mPos).array();
-        return (d >= 0).all() && (d < mSize.array()).all();
+        return  (d >= 0).all() && (d < mSize.array()).all();
     }
 
     /// Determine the widget located at the given position value (recursive)
-    Widget *findWidget(const Vector2i &p);
+    virtual Widget *findWidget(const Vector2i &p);
 
     /// Handle a mouse button event (default implementation: propagate to children)
     virtual bool mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers);

@@ -50,6 +50,9 @@ public:
     /// Set window size
     void setSize(const Vector2i& size);
 
+    /// Clear the Screen contents. Called before drawAll()
+    virtual void clearAll();
+
     /// Draw the Screen contents
     virtual void drawAll();
 
@@ -103,7 +106,11 @@ public:
     Screen();
 
     /// Initialize the \ref Screen
+#if defined(NANOGUI_FAKEGLFW)
+    void initialize(const Vector2i& size, NVGcontext * ctx);
+#else
     void initialize(GLFWwindow *window, bool shutdownGLFWOnDestruct);
+#endif
 
     /* Event handlers */
     bool cursorPosCallbackEvent(double x, double y);

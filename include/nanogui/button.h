@@ -32,7 +32,7 @@ public:
         Right
     };
 
-    Button(Widget *parent, const std::string &caption = "Untitled", int icon = 0);
+    Button(Widget *parent, const std::string &caption = "Untitled", int icon = 0, bool centerText = true);
 
     const std::string &caption() const { return mCaption; }
     void setCaption(const std::string &caption) { mCaption = caption; }
@@ -86,6 +86,7 @@ protected:
     std::function<void()> mCallback;
     std::function<void(bool)> mChangeCallback;
     std::vector<Button *> mButtonGroup;
+    bool mCenterText;
 };
 
 NAMESPACE_END(nanogui)

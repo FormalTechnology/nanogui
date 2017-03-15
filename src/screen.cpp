@@ -20,10 +20,45 @@
 #include <map>
 
 /* Allow enforcing the GL2 implementation of NanoVG */
+#if defined(NANOGUI_FAKEGLFW)
+#define NANOVG_GL2_IMPLEMENTATION
+#else
 #define NANOVG_GL3_IMPLEMENTATION
+#endif
+
 #include <nanovg_gl.h>
 
 NAMESPACE_BEGIN(nanogui)
+
+#if defined(NANOGUI_FAKEGLFW)
+Screen::Screen() : Widget(nullptr),
+                   mNVGContext(nullptr),
+                   mCursor(Cursor::Arrow) {
+}
+
+void Screen::initialize(const Vector2i& size, NVGcontext * ctx ) {
+    mFBSize = size;
+    setSize(size);
+    mNVGContext = ctx;
+
+    if (mNVGContext == nullptr) {
+        throw std::runtime_error("Screen has null NVGcontext!");
+    }
+
+    mVisible = true;
+    mTheme = new Theme( mNVGContext );
+    mMousePos = Vector2i::Zero();
+    mMouseState = mModifiers = 0;
+    mDragActive = false;
+    mLastInteraction = glfwGetTime();
+    mProcessEvents = true;
+    mBackground = Vector3f(0.3f, 0.3f, 0.32f);
+}
+
+Screen::~Screen() {
+}
+
+#else
 
 std::map<GLFWwindow *, Screen *> __nanogui_screens;
 
@@ -234,47 +269,64 @@ Screen::~Screen() {
     if (mGLFWWindow && mShutdownGLFWOnDestruct)
         glfwDestroyWindow(mGLFWWindow);
 }
+#endif // NANOGUI_FAKEGLFW
 
 void Screen::setVisible(bool visible) {
     if (mVisible != visible) {
         mVisible = visible;
 
+#if !defined(NANOGUI_FAKEGLFW)
         if (visible)
             glfwShowWindow(mGLFWWindow);
         else
             glfwHideWindow(mGLFWWindow);
+#endif
     }
 }
 
 void Screen::setCaption(const std::string &caption) {
     if (caption != mCaption) {
+#if !defined(NANOGUI_FAKEGLFW)
         glfwSetWindowTitle(mGLFWWindow, caption.c_str());
+#endif
         mCaption = caption;
     }
 }
 
 void Screen::setSize(const Vector2i &size) {
     Widget::setSize(size);
+#if defined(NANOGUI_FAKEGLFW)
+    mFBSize = size;
+#else
     glfwSetWindowSize(mGLFWWindow, size.x(), size.y());
+#endif
+}
+
+void Screen::clearAll() {
+    glClearColor(mBackground[0], mBackground[1], mBackground[2], 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 void Screen::drawAll() {
-    glClearColor(mBackground[0], mBackground[1], mBackground[2], 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    clearAll();
 
     drawContents();
     drawWidgets();
 
+#if !defined(NANOGUI_FAKEGLFW)
     glfwSwapBuffers(mGLFWWindow);
+#endif
 }
 
 void Screen::drawWidgets() {
     if (!mVisible)
         return;
 
+#if !defined(NANOGUI_FAKEGLFW)
     glfwMakeContextCurrent(mGLFWWindow);
     glfwGetFramebufferSize(mGLFWWindow, &mFBSize[0], &mFBSize[1]);
     glfwGetWindowSize(mGLFWWindow, &mSize[0], &mSize[1]);
+#endif
     glViewport(0, 0, mFBSize[0], mFBSize[1]);
 
     /* Calculate pixel ratio for hi-dpi devices. */
@@ -358,7 +410,9 @@ bool Screen::cursorPosCallbackEvent(double x, double y) {
             Widget *widget = findWidget(p);
             if (widget != nullptr && widget->cursor() != mCursor) {
                 mCursor = widget->cursor();
+#if !defined(NANOGUI_FAKEGLFW)
                 glfwSetCursor(mGLFWWindow, mCursors[(int) mCursor]);
+#endif
             }
         } else {
             ret = mDragWidget->mouseDragEvent(
@@ -407,7 +461,9 @@ bool Screen::mouseButtonCallbackEvent(int button, int action, int modifiers) {
 
         if (dropWidget != nullptr && dropWidget->cursor() != mCursor) {
             mCursor = dropWidget->cursor();
+#if !defined(NANOGUI_FAKEGLFW)
             glfwSetCursor(mGLFWWindow, mCursors[(int) mCursor]);
+#endif
         }
 
         if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_1) {
@@ -483,8 +539,10 @@ bool Screen::scrollCallbackEvent(double x, double y) {
 
 bool Screen::resizeCallbackEvent(int, int) {
     Vector2i fbSize, size;
+#if !defined(NANOGUI_FAKEGLFW)
     glfwGetFramebufferSize(mGLFWWindow, &fbSize[0], &fbSize[1]);
     glfwGetWindowSize(mGLFWWindow, &size[0], &size[1]);
+#endif
 
     if (mFBSize == Vector2i(0, 0) || size == Vector2i(0, 0))
         return false;
