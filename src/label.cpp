@@ -12,7 +12,9 @@
 #include <nanogui/label.h>
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
+#endif
 
 NAMESPACE_BEGIN(nanogui)
 
@@ -57,6 +59,7 @@ void Label::draw(NVGcontext *ctx) {
     }
 }
 
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 void Label::save(Serializer &s) const {
     Widget::save(s);
     s.set("caption", mCaption);
@@ -71,5 +74,6 @@ bool Label::load(Serializer &s) {
     if (!s.get("color", mColor)) return false;
     return true;
 }
+#endif
 
 NAMESPACE_END(nanogui)

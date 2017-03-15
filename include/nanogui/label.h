@@ -46,8 +46,10 @@ public:
     /// Draw the label
     virtual void draw(NVGcontext *ctx);
 
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
     virtual void save(Serializer &s) const;
     virtual bool load(Serializer &s);
+#endif
 protected:
     std::string mCaption;
     std::string mFont;

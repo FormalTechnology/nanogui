@@ -13,7 +13,9 @@
 #include <nanogui/entypo.h>
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
+#endif
 
 NAMESPACE_BEGIN(nanogui)
 
@@ -66,6 +68,7 @@ void PopupButton::performLayout(NVGcontext *ctx) {
         absolutePosition().y() - parentWindow->position().y() + mSize.y() /2));
 }
 
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 void PopupButton::save(Serializer &s) const {
     Button::save(s);
     s.set("chevronIcon", mChevronIcon);
@@ -78,5 +81,6 @@ bool PopupButton::load(Serializer &s) {
         return false;
     return true;
 }
+#endif
 
 NAMESPACE_END(nanogui)

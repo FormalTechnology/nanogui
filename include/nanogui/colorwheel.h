@@ -35,8 +35,10 @@ public:
     virtual bool mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers);
     virtual bool mouseDragEvent(const Vector2i &p, const Vector2i &rel, int button, int modifiers);
 
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
     virtual void save(Serializer &s) const;
     virtual bool load(Serializer &s);
+#endif
 private:
     enum Region {
         None = 0,

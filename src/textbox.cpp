@@ -17,7 +17,9 @@
 #include <nanogui/textbox.h>
 #include <nanogui/opengl.h>
 #include <nanogui/theme.h>
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
+#endif
 #include <regex>
 
 NAMESPACE_BEGIN(nanogui)
@@ -520,6 +522,7 @@ int TextBox::position2CursorIndex(float posx, float lastx,
     return mCursorId;
 }
 
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 void TextBox::save(Serializer &s) const {
     Widget::save(s);
     s.set("editable", mEditable);
@@ -556,5 +559,6 @@ bool TextBox::load(Serializer &s) {
     mMouseDownModifier = mTextOffset = 0;
     return true;
 }
+#endif
 
 NAMESPACE_END(nanogui)

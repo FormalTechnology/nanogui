@@ -13,7 +13,9 @@
 #include <nanogui/popup.h>
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
+#endif
 
 NAMESPACE_BEGIN(nanogui)
     
@@ -72,6 +74,7 @@ void Popup::draw(NVGcontext* ctx) {
     Widget::draw(ctx);
 }
 
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 void Popup::save(Serializer &s) const {
     Window::save(s);
     s.set("anchorPos", mAnchorPos);
@@ -84,5 +87,6 @@ bool Popup::load(Serializer &s) {
     if (!s.get("anchorHeight", mAnchorHeight)) return false;
     return true;
 }
+#endif
 
 NAMESPACE_END(nanogui)

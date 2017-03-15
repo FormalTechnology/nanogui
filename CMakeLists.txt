@@ -12,6 +12,7 @@ option(NANOGUI_BUILD_EXAMPLE "Build NanoGUI example application?" ON)
 option(NANOGUI_BUILD_SHARED  "Build NanoGUI as a shared library?" ON)
 option(NANOGUI_BUILD_PYTHON  "Build a Python plugin for NanoGUI?" ON)
 set(NANOGUI_PYTHON_VERSION "" CACHE STRING "Python version to use for compiling the Python plugin")
+option(NANOGUI_DISABLE_SERIALIZATION "Disable NanoGUI serialisation?" ON)
 
 # Required libraries for linking against nanogui (all targets)
 set(NANOGUI_EXTRA_LIBS "")
@@ -56,6 +57,15 @@ endif()
 # Shared library mode: add NANOGUI_SHARED flag to all targets
 if (NANOGUI_BUILD_SHARED)
   add_definitions ("-DNANOGUI_SHARED")
+endif()
+
+if (NANOGUI_DISABLE_SERIALIZATION)
+    add_definitions(-DNANOGUI_DISABLE_SERIALIZATION)
+else()
+	list(APPEND LIBNANOGUI_EXTRA_SOURCE include/nanogui/serializer/core.h
+		include/nanogui/serializer/opengl.h
+		include/nanogui/serializer/sparse.h
+		src/serializer.cpp)
 endif()
 
 if (MSVC)
@@ -183,10 +193,6 @@ add_library(nanogui ${NANOGUI_LIBRARY_TYPE}
   include/nanogui/toolbutton.h
   include/nanogui/opengl.h
   include/nanogui/nanogui.h
-  include/nanogui/serializer/core.h
-  include/nanogui/serializer/opengl.h
-  include/nanogui/serializer/sparse.h
-  src/serializer.cpp
 )
 
 # Compile/link flags for NanoGUI

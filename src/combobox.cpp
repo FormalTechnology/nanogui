@@ -11,7 +11,9 @@
 
 #include <nanogui/combobox.h>
 #include <nanogui/layout.h>
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
+#endif
 #include <cassert>
 
 NAMESPACE_BEGIN(nanogui)
@@ -65,6 +67,7 @@ void ComboBox::setItems(const std::vector<std::string> &items, const std::vector
     setSelectedIndex(mSelectedIndex);
 }
 
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 void ComboBox::save(Serializer &s) const {
     Widget::save(s);
     s.set("items", mItems);
@@ -79,5 +82,6 @@ bool ComboBox::load(Serializer &s) {
     if (!s.get("selectedIndex", mSelectedIndex)) return false;
     return true;
 }
+#endif
 
 NAMESPACE_END(nanogui)

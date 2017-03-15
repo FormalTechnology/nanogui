@@ -13,7 +13,9 @@
 #include <nanogui/opengl.h>
 #include <nanogui/theme.h>
 #include <nanogui/entypo.h>
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
+#endif
 
 NAMESPACE_BEGIN(nanogui)
 
@@ -89,6 +91,7 @@ void CheckBox::draw(NVGcontext *ctx) {
     }
 }
 
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 void CheckBox::save(Serializer &s) const {
     Widget::save(s);
     s.set("caption", mCaption);
@@ -103,5 +106,6 @@ bool CheckBox::load(Serializer &s) {
     if (!s.get("checked", mChecked)) return false;
     return true;
 }
+#endif
 
 NAMESPACE_END(nanogui)

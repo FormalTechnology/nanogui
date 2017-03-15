@@ -27,8 +27,11 @@ public:
     virtual bool mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers);
     virtual bool mouseMotionEvent(const Vector2i &p, const Vector2i &rel, int button, int modifiers);
     virtual void draw(NVGcontext *ctx);
+
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
     virtual void save(Serializer &s) const;
     virtual bool load(Serializer &s);
+#endif
 protected:
     int mChildPreferredHeight;
     float mScroll;

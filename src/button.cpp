@@ -12,7 +12,9 @@
 #include <nanogui/button.h>
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
+#endif
 
 NAMESPACE_BEGIN(nanogui)
 
@@ -217,6 +219,7 @@ void Button::draw(NVGcontext *ctx) {
     nvgText(ctx, textPos.x(), textPos.y() + 1, mCaption.c_str(), nullptr);
 }
 
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 void Button::save(Serializer &s) const {
     Widget::save(s);
     s.set("caption", mCaption);
@@ -241,5 +244,6 @@ bool Button::load(Serializer &s) {
     if (!s.get("textColor", mTextColor)) return false;
     return true;
 }
+#endif
 
 NAMESPACE_END(nanogui)

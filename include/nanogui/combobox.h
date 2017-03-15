@@ -41,8 +41,10 @@ public:
     const std::vector<std::string> &items() const { return mItems; }
     const std::vector<std::string> &itemsShort() const { return mItemsShort; }
 
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
     virtual void save(Serializer &s) const;
     virtual bool load(Serializer &s);
+#endif
 protected:
     std::vector<std::string> mItems, mItemsShort;
     std::function<void(int)> mCallback;

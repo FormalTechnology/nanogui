@@ -14,7 +14,9 @@
 #include <nanogui/opengl.h>
 #include <nanogui/screen.h>
 #include <nanogui/layout.h>
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
+#endif
 
 NAMESPACE_BEGIN(nanogui)
 
@@ -179,6 +181,7 @@ void Window::refreshRelativePlacement() {
     /* Overridden in \ref Popup */
 }
 
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 void Window::save(Serializer &s) const {
     Widget::save(s);
     s.set("title", mTitle);
@@ -192,5 +195,6 @@ bool Window::load(Serializer &s) {
     mDrag = false;
     return true;
 }
+#endif
 
 NAMESPACE_END(nanogui)

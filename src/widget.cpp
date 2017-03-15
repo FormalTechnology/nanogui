@@ -15,7 +15,9 @@
 #include <nanogui/window.h>
 #include <nanogui/opengl.h>
 #include <nanogui/screen.h>
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
+#endif
 
 NAMESPACE_BEGIN(nanogui)
 
@@ -189,6 +191,7 @@ void Widget::draw(NVGcontext *ctx) {
     nvgTranslate(ctx, -mPos.x(), -mPos.y());
 }
 
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 void Widget::save(Serializer &s) const {
     s.set("position", mPos);
     s.set("size", mSize);
@@ -215,5 +218,6 @@ bool Widget::load(Serializer &s) {
     mCursor = (Cursor) cursor;
     return true;
 }
+#endif
 
 NAMESPACE_END(nanogui)

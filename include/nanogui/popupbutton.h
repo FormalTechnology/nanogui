@@ -33,8 +33,10 @@ public:
     virtual Vector2i preferredSize(NVGcontext *ctx) const;
     virtual void performLayout(NVGcontext *ctx);
 
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
     virtual void save(Serializer &s) const;
     virtual bool load(Serializer &s);
+#endif
 protected:
     Popup *mPopup;
     int mChevronIcon;

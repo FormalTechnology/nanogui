@@ -14,7 +14,9 @@
 #include <nanogui/colorwheel.h>
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
+#endif
 #include <Eigen/QR>
 #include <Eigen/Geometry>
 
@@ -304,6 +306,7 @@ void ColorWheel::setColor(const Color &rgb) {
     }
 }
 
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 void ColorWheel::save(Serializer &s) const {
     Widget::save(s);
     s.set("hue", mHue);
@@ -319,6 +322,7 @@ bool ColorWheel::load(Serializer &s) {
     mDragRegion = Region::None;
     return true;
 }
+#endif
 
 NAMESPACE_END(nanogui)
 

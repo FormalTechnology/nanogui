@@ -11,7 +11,9 @@
 
 #include <nanogui/progressbar.h>
 #include <nanogui/opengl.h>
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
+#endif
 
 NAMESPACE_BEGIN(nanogui)
 
@@ -49,6 +51,7 @@ void ProgressBar::draw(NVGcontext* ctx) {
     nvgFill(ctx);
 }
 
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 void ProgressBar::save(Serializer &s) const {
     Widget::save(s);
     s.set("value", mValue);
@@ -61,5 +64,6 @@ bool ProgressBar::load(Serializer &s) {
         return false;
     return true;
 }
+#endif
 
 NAMESPACE_END(nanogui)

@@ -12,7 +12,9 @@
 #include <nanogui/graph.h>
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
+#endif
 
 NAMESPACE_BEGIN(nanogui)
 
@@ -82,6 +84,7 @@ void Graph::draw(NVGcontext *ctx) {
     nvgStroke(ctx);
 }
 
+#if !defined(NANOGUI_DISABLE_SERIALIZATION)
 void Graph::save(Serializer &s) const {
     Widget::save(s);
     s.set("caption", mCaption);
@@ -104,5 +107,6 @@ bool Graph::load(Serializer &s) {
     if (!s.get("values", mValues)) return false;
     return true;
 }
+#endif
 
 NAMESPACE_END(nanogui)
