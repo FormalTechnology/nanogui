@@ -1,30 +1,36 @@
 /*
     nanogui/button.h -- [Normal/Toggle/Radio/Popup] Button widget
 
-    NanoGUI was developed by Wenzel Jakob <wenzel@inf.ethz.ch>.
+    NanoGUI was developed by Wenzel Jakob <wenzel.jakob@epfl.ch>.
     The widget drawing code is based on the NanoVG demo application
     by Mikko Mononen.
 
     All rights reserved. Use of this source code is governed by a
     BSD-style license that can be found in the LICENSE.txt file.
 */
+/** \file */
 
 #pragma once
 
 #include <nanogui/widget.h>
 
 NAMESPACE_BEGIN(nanogui)
-
+/**
+ * \class Button button.h nanogui/button.h
+ *
+ * \brief [Normal/Toggle/Radio/Popup] Button widget.
+ */
 class NANOGUI_EXPORT Button : public Widget {
 public:
     /// Flags to specify the button behavior (can be combined with binary OR)
     enum Flags {
-        NormalButton = 1,
-        RadioButton  = 2,
-        ToggleButton = 4,
-        PopupButton  = 8
+        NormalButton = (1 << 0), // 1
+        RadioButton  = (1 << 1), // 2
+        ToggleButton = (1 << 2), // 4
+        PopupButton  = (1 << 3)  // 8
     };
 
+    /// The available icon positions.
     enum class IconPosition {
         Left,
         LeftCentered,
@@ -67,13 +73,13 @@ public:
     void setButtonGroup(const std::vector<Button *> &buttonGroup) { mButtonGroup = buttonGroup; }
     const std::vector<Button *> &buttonGroup() const { return mButtonGroup; }
 
-    virtual Vector2i preferredSize(NVGcontext *ctx) const;
-    virtual bool mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers);
-    virtual void draw(NVGcontext *ctx);
+    virtual Vector2i preferredSize(NVGcontext *ctx) const override;
+    virtual bool mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers) override;
+    virtual void draw(NVGcontext *ctx) override;
 
 #if !defined(NANOGUI_DISABLE_SERIALIZATION)
-    virtual void save(Serializer &s) const;
-    virtual bool load(Serializer &s);
+    virtual void save(Serializer &s) const override;
+    virtual bool load(Serializer &s) override;
 #endif
 protected:
     std::string mCaption;
@@ -87,6 +93,8 @@ protected:
     std::function<void(bool)> mChangeCallback;
     std::vector<Button *> mButtonGroup;
     bool mCenterText;
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 NAMESPACE_END(nanogui)

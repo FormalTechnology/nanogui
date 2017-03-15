@@ -1,13 +1,14 @@
 /*
     nanogui/checkbox.h -- Two-state check box widget
 
-    NanoGUI was developed by Wenzel Jakob <wenzel@inf.ethz.ch>.
+    NanoGUI was developed by Wenzel Jakob <wenzel.jakob@epfl.ch>.
     The widget drawing code is based on the NanoVG demo application
     by Mikko Mononen.
 
     All rights reserved. Use of this source code is governed by a
     BSD-style license that can be found in the LICENSE.txt file.
 */
+/** \file */
 
 #pragma once
 
@@ -15,6 +16,11 @@
 
 NAMESPACE_BEGIN(nanogui)
 
+/**
+ * \class CheckBox checkbox.h nanogui/checkbox.h
+ *
+ * \brief Two-state check box widget.
+ */
 class NANOGUI_EXPORT CheckBox : public Widget {
 public:
     CheckBox(Widget *parent, const std::string &caption = "Untitled",
@@ -32,18 +38,20 @@ public:
     std::function<void(bool)> callback() const { return mCallback; }
     void setCallback(const std::function<void(bool)> &callback) { mCallback = callback; }
 
-    virtual bool mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers);
-    virtual Vector2i preferredSize(NVGcontext *ctx) const;
-    virtual void draw(NVGcontext *ctx);
+    virtual bool mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers) override;
+    virtual Vector2i preferredSize(NVGcontext *ctx) const override;
+    virtual void draw(NVGcontext *ctx) override;
 
 #if !defined(NANOGUI_DISABLE_SERIALIZATION)
-    virtual void save(Serializer &s) const;
-    virtual bool load(Serializer &s);
+    virtual void save(Serializer &s) const override;
+    virtual bool load(Serializer &s) override;
 #endif
 protected:
     std::string mCaption;
     bool mPushed, mChecked;
     std::function<void(bool)> mCallback;
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 NAMESPACE_END(nanogui)

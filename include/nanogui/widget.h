@@ -1,13 +1,14 @@
 /*
     nanogui/widget.h -- Base class of all widgets
 
-    NanoGUI was developed by Wenzel Jakob <wenzel@inf.ethz.ch>.
+    NanoGUI was developed by Wenzel Jakob <wenzel.jakob@epfl.ch>.
     The widget drawing code is based on the NanoVG demo application
     by Mikko Mononen.
 
     All rights reserved. Use of this source code is governed by a
     BSD-style license that can be found in the LICENSE.txt file.
 */
+/** \file */
 
 #pragma once
 
@@ -16,10 +17,12 @@
 
 NAMESPACE_BEGIN(nanogui)
 
-enum class Cursor;
+enum class Cursor;// do not put a docstring, this is already documented
 
 /**
- * \brief Base class of all widgets
+ * \class Widget widget.h nanogui/widget.h
+ *
+ * \brief Base class of all widgets.
  *
  * \ref Widget is the base class of all widgets in \c nanogui. It can
  * also be used as an panel to arrange an arbitrary number of child
@@ -49,7 +52,7 @@ public:
     /// Return the \ref Theme used to draw this widget
     const Theme *theme() const { return mTheme.get(); }
     /// Set the \ref Theme used to draw this widget
-    void setTheme(Theme *theme) { mTheme = theme; }
+    virtual void setTheme(Theme *theme);
 
     /// Return the position relative to the parent widget
     const Vector2i &position() const { return mPos; }
@@ -123,12 +126,16 @@ public:
     const std::vector<Widget *> &children() const { return mChildren; }
 
     /**
-     * \brief Add a child widget to the current widget
+     * \brief Add a child widget to the current widget at
+     * the specified index.
      *
      * This function almost never needs to be called by hand,
      * since the constructor of \ref Widget automatically
      * adds the current widget to its parent
      */
+    virtual void addChild(int index, Widget *widget);
+
+    /// Convenience function which appends a widget at the end
     void addChild(Widget *widget);
 
     /// Remove a child widget by index
@@ -137,7 +144,22 @@ public:
     /// Remove a child widget by value
     void removeChild(const Widget *widget);
 
-    // Walk up the hierarchy and return the parent window
+    /// Retrieves the child at the specific position
+    const Widget* childAt(int index) const { return mChildren[index]; }
+
+    /// Retrieves the child at the specific position
+    Widget* childAt(int index) { return mChildren[index]; }
+
+    /// Returns the index of a specific child or -1 if not found
+    int childIndex(Widget* widget) const;
+
+    /// Variadic shorthand notation to construct and add a child widget
+    template<typename WidgetClass, typename... Args>
+    WidgetClass* add(const Args&... args) {
+        return new WidgetClass(this, args...);
+    }
+
+    /// Walk up the hierarchy and return the parent window
     Window *window();
 
     /// Associate this widget with an ID value (optional)
@@ -175,7 +197,7 @@ public:
     /// Check if the widget contains a certain position
     bool contains(const Vector2i &p) const {
         auto d = (p-mPos).array();
-        return  (d >= 0).all() && (d < mSize.array()).all();
+        return (d >= 0).all() && (d < mSize.array()).all();
     }
 
     /// Determine the widget located at the given position value (recursive)
@@ -221,6 +243,7 @@ public:
     /// Restore the state of the widget from the given \ref Serializer instance
     virtual bool load(Serializer &s);
 #endif
+
 protected:
     /// Free all resources used by the widget and any children
     virtual ~Widget();
@@ -237,6 +260,8 @@ protected:
     std::string mTooltip;
     int mFontSize;
     Cursor mCursor;
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 NAMESPACE_END(nanogui)

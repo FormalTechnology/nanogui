@@ -25,7 +25,7 @@ std::string file_dialog(const std::vector<std::pair<std::string, std::string>> &
         NSMutableArray *types = [NSMutableArray new];
         for (size_t idx = 0; idx < filetypes.size(); ++idx)
             [types addObject: [NSString stringWithUTF8String: filetypes[idx].first.c_str()]];
-        
+
         [openDlg setAllowedFileTypes: types];
 
         if ([openDlg runModal] == NSModalResponseOK) {
@@ -41,6 +41,10 @@ std::string file_dialog(const std::vector<std::pair<std::string, std::string>> &
 void chdir_to_bundle_parent() {
     NSString *path = [[[NSBundle mainBundle] bundlePath] stringByDeletingLastPathComponent];
     chdir([path fileSystemRepresentation]);
+}
+
+void disable_saved_application_state_osx() {
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"NSQuitAlwaysKeepsWindows"];
 }
 
 NAMESPACE_END(nanogui)

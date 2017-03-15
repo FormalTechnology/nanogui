@@ -2,13 +2,14 @@
     nanogui/formhelper.h -- helper class to construct forms for editing a set
     of variables of various types
 
-    NanoGUI was developed by Wenzel Jakob <wenzel@inf.ethz.ch>.
+    NanoGUI was developed by Wenzel Jakob <wenzel.jakob@epfl.ch>.
     The widget drawing code is based on the NanoVG demo application
     by Mikko Mononen.
 
     All rights reserved. Use of this source code is governed by a
     BSD-style license that can be found in the LICENSE.txt file.
 */
+/** \file */
 
 #pragma once
 
@@ -24,40 +25,100 @@
 NAMESPACE_BEGIN(nanogui)
 
 NAMESPACE_BEGIN(detail)
+/**
+ * \class FormWidget formhelper.h nanogui/formhelper.h
+ *
+ * \brief A template wrapper class for assisting in the creation of various form widgets.
+ *
+ * \rst
+ * The partial template specializations are:
+ *
+ * - Inheritance from :ref:`class_nanogui__ComboBox` for ``enum`` types:
+ *
+ *   .. code-block:: cpp
+ *
+ *      template <typename T>
+ *      class FormWidget<T, typename std::is_enum<T>::type> : public ComboBox
+ *
+ * - Inheritance from :ref:`class_nanogui__IntBox` for integral types:
+ *
+ *   .. code-block:: cpp
+ *
+ *      template <typename T>
+ *      class FormWidget<T, typename std::is_integral<T>::type> : public IntBox<T>
+ *
+ * - Inheritance from :ref:`class_nanogui__FloatBox` for floating point types:
+ *
+ *   .. code-block:: cpp
+ *
+ *      template <typename T>
+ *      class FormWidget<T, typename std::is_floating_point<T>::type> : public FloatBox<T>
+ *
+ * The full template specializations are:
+ *
+ * - Inheritance from :ref:`class_nanogui__CheckBox` for booleans:
+ *
+ *   .. code-block:: cpp
+ *
+ *      template <>
+ *      class FormWidget<bool, std::true_type> : public CheckBox
+ *
+ * - Inheritance from :ref:`class_nanogui__TextBox` for strings:
+ *
+ *   .. code-block:: cpp
+ *
+ *      template <>
+ *      class FormWidget<std::string, std::true_type> : public TextBox
+ *
+ * - Inheritance from :ref:`class_nanogui__ColorPicker` for `Color` types:
+ *
+ *   .. code-block:: cpp
+ *
+ *      template <>
+ *      class FormWidget<Color, std::true_type> : public ColorPicker
+ *
+ * Please refer to the bottom of :ref:`program_listing_file_include_nanogui_formhelper.h`
+ * for the implementation details.
+ * \endrst
+ */
 template <typename T, typename sfinae = std::true_type> class FormWidget { };
 NAMESPACE_END(detail)
 
 /**
-* \brief Convenience class to create simple AntTweakBar-style layouts that
-*        expose variables of various types using NanoGUI widgets
-*
-* Example:
-*
-* <pre>
-* [ ... initialize NanoGUI, construct screen ... ]
-*
-* FormHelper* h = new FormHelper(screen);
-*
-* // Add a new windows widget
-* h->addWindow(Eigen::Vector2i(10,10),"Menu");
-*
-* // Start a new group
-* h->addGroup("Group 1");
-*
-* // Expose an integer variable by reference
-* h->addVariable("integer variable", aInt);
-*
-* // Expose a float variable via setter/getter functions
-* h->addVariable(
-*   [&](float value){ aFloat = value; },
-*   [&](){ return *aFloat; },
-*   "float variable");
-*
-* // add a new button
-* h->addButton("Button",[&](){ std::cout << "Button pressed" << std::endl; });
-* </pre>
-*/
-
+ * \class FormHelper formhelper.h nanogui/formhelper.h
+ *
+ * \brief Convenience class to create simple AntTweakBar-style layouts that
+ *        expose variables of various types using NanoGUI widgets
+ *
+ * **Example**:
+ *
+ * \rst
+ * .. code-block:: cpp
+ *
+ *    // [ ... initialize NanoGUI, construct screen ... ]
+ *
+ *    FormHelper* h = new FormHelper(screen);
+ *
+ *    // Add a new windows widget
+ *    h->addWindow(Eigen::Vector2i(10,10),"Menu");
+ *
+ *    // Start a new group
+ *    h->addGroup("Group 1");
+ *
+ *    // Expose an integer variable by reference
+ *    h->addVariable("integer variable", aInt);
+ *
+ *    // Expose a float variable via setter/getter functions
+ *    h->addVariable(
+ *      [&](float value) { aFloat = value; },
+ *      [&]() { return *aFloat; },
+ *      "float variable");
+ *
+ *    // add a new button
+ *    h->addButton("Button", [&]() { std::cout << "Button pressed" << std::endl; });
+ *
+ * \endrst
+ */
 class FormHelper {
 public:
     /// Create a helper class to construct NanoGUI widgets on the given screen
@@ -90,7 +151,7 @@ public:
 
     /// Add a new data widget controlled using custom getter/setter functions
     template <typename Type> detail::FormWidget<Type> *
-    addVariable(const std::string &label, const std::function<void(Type)> &setter,
+    addVariable(const std::string &label, const std::function<void(const Type &)> &setter,
                 const std::function<Type()> &getter, bool editable = true) {
         Label *labelW = new Label(mWindow, label, mLabelFontName, mLabelFontSize);
         auto widget = new detail::FormWidget<Type>(mWindow);
@@ -119,7 +180,7 @@ public:
     template <typename Type> detail::FormWidget<Type> *
     addVariable(const std::string &label, Type &value, bool editable = true) {
         return addVariable<Type>(label,
-            [&](Type v) { value = v; },
+            [&](const Type & v) { value = v; },
             [&]() -> Type { return value; },
             editable
         );
@@ -195,9 +256,15 @@ protected:
     int mPreGroupSpacing = 15;
     int mPostGroupSpacing = 5;
     int mVariableSpacing = 5;
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 NAMESPACE_BEGIN(detail)
+
+// template specialization unsupported
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+
 /* Various types of form widgets for different input types below */
 template <> class FormWidget<bool, std::true_type> : public CheckBox {
 public:
@@ -205,6 +272,8 @@ public:
     void setValue(bool v) { setChecked(v); }
     void setEditable(bool e) { setEnabled(e); }
     bool value() const { return checked(); }
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 template <typename T> class FormWidget<T, typename std::is_enum<T>::type> : public ComboBox {
@@ -212,20 +281,26 @@ public:
     FormWidget(Widget *p) : ComboBox(p) { }
     T value() const { return (T) selectedIndex(); }
     void setValue(T value) { setSelectedIndex((int) value); mSelectedIndex = (int) value; }
-    void setCallback(const std::function<void(T)> &cb) {
-        ComboBox::setCallback([cb](int v) { cb((T) v); });
+    void setCallback(const std::function<void(const T &)> &cb) {
+        ComboBox::setCallback([cb](int v) { cb((const T &) v); });
     }
     void setEditable(bool e) { setEnabled(e); }
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 template <typename T> class FormWidget<T, typename std::is_integral<T>::type> : public IntBox<T> {
 public:
     FormWidget(Widget *p) : IntBox<T>(p) { this->setAlignment(TextBox::Alignment::Right); }
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 template <typename T> class FormWidget<T, typename std::is_floating_point<T>::type> : public FloatBox<T> {
 public:
     FormWidget(Widget *p) : FloatBox<T>(p) { this->setAlignment(TextBox::Alignment::Right); }
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 template <> class FormWidget<std::string, std::true_type> : public TextBox {
@@ -234,6 +309,8 @@ public:
     void setCallback(const std::function<void(const std::string&)> &cb) {
         TextBox::setCallback([cb](const std::string &str) { cb(str); return true; });
     }
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 template <> class FormWidget<Color, std::true_type> : public ColorPicker {
@@ -242,7 +319,11 @@ public:
     void setValue(const Color &c) { setColor(c); }
     void setEditable(bool e) { setEnabled(e); }
     Color value() const { return color(); }
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
+
+#endif // DOXYGEN_SHOULD_SKIP_THIS
 
 NAMESPACE_END(detail)
 NAMESPACE_END(nanogui)

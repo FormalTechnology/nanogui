@@ -1,7 +1,7 @@
 /*
     src/button.cpp -- [Normal/Toggle/Radio/Popup] Button widget
 
-    NanoGUI was developed by Wenzel Jakob <wenzel@inf.ethz.ch>.
+    NanoGUI was developed by Wenzel Jakob <wenzel.jakob@epfl.ch>.
     The widget drawing code is based on the NanoVG demo application
     by Mikko Mononen.
 
@@ -82,7 +82,7 @@ bool Button::mouseButtonEvent(const Vector2i &p, int button, bool down, int modi
                     Button *b = dynamic_cast<Button *>(widget);
                     if (b != this && b && (b->flags() & PopupButton) && b->mPushed) {
                         b->mPushed = false;
-                        if(b->mChangeCallback)
+                        if (b->mChangeCallback)
                             b->mChangeCallback(false);
                     }
                 }
@@ -142,6 +142,7 @@ void Button::draw(NVGcontext *ctx) {
     nvgFill(ctx);
 
     nvgBeginPath(ctx);
+    nvgStrokeWidth(ctx, 1.0f);
     nvgRoundedRect(ctx, mPos.x() + 0.5f, mPos.y() + (mPushed ? 0.5f : 1.5f), mSize.x() - 1,
                    mSize.y() - 1 - (mPushed ? 0.0f : 1.0f), mTheme->mButtonCornerRadius);
     nvgStrokeColor(ctx, mTheme->mBorderLight);
@@ -240,9 +241,7 @@ bool Button::load(Serializer &s) {
     if (!Widget::load(s)) return false;
     if (!s.get("caption", mCaption)) return false;
     if (!s.get("icon", mIcon)) return false;
-    int iconPosition;
-    if (!s.get("iconPosition", iconPosition)) return false;
-    mIconPosition = (IconPosition) iconPosition;
+    if (!s.get("iconPosition", mIconPosition)) return false;
     if (!s.get("pushed", mPushed)) return false;
     if (!s.get("flags", mFlags)) return false;
     if (!s.get("backgroundColor", mBackgroundColor)) return false;

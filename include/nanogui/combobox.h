@@ -1,13 +1,14 @@
 /*
     nanogui/combobox.h -- simple combo box widget based on a popup button
 
-    NanoGUI was developed by Wenzel Jakob <wenzel@inf.ethz.ch>.
+    NanoGUI was developed by Wenzel Jakob <wenzel.jakob@epfl.ch>.
     The widget drawing code is based on the NanoVG demo application
     by Mikko Mononen.
 
     All rights reserved. Use of this source code is governed by a
     BSD-style license that can be found in the LICENSE.txt file.
 */
+/** \file */
 
 #pragma once
 
@@ -15,6 +16,11 @@
 
 NAMESPACE_BEGIN(nanogui)
 
+/**
+ * \class ComboBox combobox.h nanogui/combobox.h
+ *
+ * \brief Simple combo box widget based on a popup button.
+ */
 class NANOGUI_EXPORT ComboBox : public PopupButton {
 public:
     /// Create an empty combo box
@@ -41,14 +47,18 @@ public:
     const std::vector<std::string> &items() const { return mItems; }
     const std::vector<std::string> &itemsShort() const { return mItemsShort; }
 
+    virtual bool scrollEvent(const Vector2i &p, const Vector2f &rel) override;
+
 #if !defined(NANOGUI_DISABLE_SERIALIZATION)
-    virtual void save(Serializer &s) const;
-    virtual bool load(Serializer &s);
+    virtual void save(Serializer &s) const override;
+    virtual bool load(Serializer &s) override;
 #endif
 protected:
     std::vector<std::string> mItems, mItemsShort;
     std::function<void(int)> mCallback;
     int mSelectedIndex;
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 NAMESPACE_END(nanogui)

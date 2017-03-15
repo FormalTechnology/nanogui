@@ -3,13 +3,14 @@
 
     This widget was contributed by Dmitriy Morozov.
 
-    NanoGUI was developed by Wenzel Jakob <wenzel@inf.ethz.ch>.
+    NanoGUI was developed by Wenzel Jakob <wenzel.jakob@epfl.ch>.
     The widget drawing code is based on the NanoVG demo application
     by Mikko Mononen.
 
     All rights reserved. Use of this source code is governed by a
     BSD-style license that can be found in the LICENSE.txt file.
 */
+/** \file */
 
 #pragma once
 
@@ -17,9 +18,14 @@
 
 NAMESPACE_BEGIN(nanogui)
 
+/**
+ * \class ColorWheel colorwheel.h nanogui/colorwheel.h
+ *
+ * \brief Fancy analog widget to select a color value.
+ */
 class NANOGUI_EXPORT ColorWheel : public Widget {
 public:
-    ColorWheel(Widget *parent, const Color& color = { 1.f, 0.f, 0.f, 1.f });
+    ColorWheel(Widget *parent, const Color& color = Color(1.0f, 0.0f, 0.0f, 1.0f));
 
     /// Set the change callback
     std::function<void(const Color &)> callback() const                  { return mCallback;     }
@@ -30,14 +36,14 @@ public:
     /// Set the current color
     void setColor(const Color& color);
 
-    virtual Vector2i preferredSize(NVGcontext *ctx) const;
-    virtual void draw(NVGcontext *ctx);
-    virtual bool mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers);
-    virtual bool mouseDragEvent(const Vector2i &p, const Vector2i &rel, int button, int modifiers);
+    virtual Vector2i preferredSize(NVGcontext *ctx) const override;
+    virtual void draw(NVGcontext *ctx) override;
+    virtual bool mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers) override;
+    virtual bool mouseDragEvent(const Vector2i &p, const Vector2i &rel, int button, int modifiers) override;
 
 #if !defined(NANOGUI_DISABLE_SERIALIZATION)
-    virtual void save(Serializer &s) const;
-    virtual bool load(Serializer &s);
+    virtual void save(Serializer &s) const override;
+    virtual bool load(Serializer &s) override;
 #endif
 private:
     enum Region {
@@ -56,6 +62,8 @@ protected:
     float mBlack;
     Region mDragRegion;
     std::function<void(const Color &)> mCallback;
+public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 NAMESPACE_END(nanogui)
