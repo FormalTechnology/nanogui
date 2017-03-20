@@ -49,6 +49,7 @@ Screen::Screen() : Widget(nullptr),
 }
 
 void Screen::initialize(const Vector2i& size, NVGcontext * ctx ) {
+    mPixelRatio = 1.0;
     mFBSize = size;
     setSize(size);
     mNVGContext = ctx;
@@ -389,7 +390,8 @@ void Screen::setCaption(const std::string &caption) {
 void Screen::setSize(const Vector2i &size) {
     Widget::setSize(size);
 #if defined(NANOGUI_FAKEGLFW)
-    mFBSize = size;
+    mSize = size;
+    mFBSize = (size * mPixelRatio).cast<int>();
 #else
 #if defined(_WIN32) || defined(__linux__)
     glfwSetWindowSize(mGLFWWindow, size.x() * mPixelRatio, size.y() * mPixelRatio);
@@ -429,7 +431,7 @@ void Screen::drawWidgets() {
 #if defined(_WIN32) || defined(__linux__)
     mSize = (mSize / mPixelRatio).cast<int>();
     mFBSize = (mSize * mPixelRatio).cast<int>();
-#else
+#elif !defined(NANOGUI_FAKEGLFW)
     /* Recompute pixel ratio on OSX */
     if (mSize[0])
         mPixelRatio = (float) mFBSize[0] / (float) mSize[0];
@@ -524,7 +526,7 @@ bool Screen::resizeEvent(const Vector2i& size) {
 bool Screen::cursorPosCallbackEvent(double x, double y) {
     Vector2i p((int) x, (int) y);
 
-#if defined(_WIN32) || defined(__linux__)
+#if defined(_WIN32) || defined(__linux__) || defined(NANOGUI_FAKEGLFW)
     p /= mPixelRatio;
 #endif
 
@@ -665,7 +667,7 @@ bool Screen::resizeCallbackEvent(int, int) {
     glfwGetWindowSize(mGLFWWindow, &size[0], &size[1]);
 #endif
 
-#if defined(_WIN32) || defined(__linux__)
+#if defined(_WIN32) || defined(__linux__) || defined(NANOGUI_FAKEGLFW)
     size /= mPixelRatio;
 #endif
 
@@ -691,18 +693,19 @@ void Screen::updateFocus(Widget *widget) {
         w->focusEvent(false);
     }
     mFocusPath.clear();
-    Widget *window = nullptr;
-    while (widget) {
-        mFocusPath.push_back(widget);
-        if (dynamic_cast<Window *>(widget))
-            window = widget;
+    Window *window = nullptr;
+    while ( widget ) {
+        mFocusPath.push_back( widget );
+        Window *maybe_window = dynamic_cast<Window *>(widget);
+        if ( maybe_window )
+            window = maybe_window;
         widget = widget->parent();
     }
     for (auto it = mFocusPath.rbegin(); it != mFocusPath.rend(); ++it)
         (*it)->focusEvent(true);
 
     if (window)
-        moveWindowToFront((Window *) window);
+        moveWindowToFront(window);
 }
 
 void Screen::disposeWindow(Window *window) {
