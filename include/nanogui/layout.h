@@ -286,6 +286,7 @@ public:
         }
     };
 
+    /// Create an AdvancedGridLayout by specifying a set of column and row sizes.
     AdvancedGridLayout(const std::vector<int> &cols = {}, const std::vector<int> &rows = {}, int margin = 0);
 
     int margin() const { return mMargin; }
@@ -311,6 +312,8 @@ public:
 
     /// Specify the anchor data structure for a given widget
     void setAnchor(const Widget *widget, const Anchor &anchor) { mAnchor[widget] = anchor; }
+
+    void removeAnchor(const Widget *widget) { mAnchor.erase(widget); }
 
     /// Retrieve the anchor data structure for a given widget
     Anchor anchor(const Widget *widget) const {
