@@ -17,7 +17,7 @@
 #include <nanogui/glcanvas.h>
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
-#if !defined(NANOGUI_DISABLE_SERIALIZATION)
+#if defined(NANOGUI_ENABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
 #endif
 
@@ -78,7 +78,7 @@ void GLCanvas::draw(NVGcontext *ctx) {
                storedViewport[2], storedViewport[3]);
 }
 
-#if !defined(NANOGUI_DISABLE_SERIALIZATION)
+#if defined(NANOGUI_ENABLE_SERIALIZATION)
 void GLCanvas::save(Serializer &s) const {
     Widget::save(s);
     s.set("backgroundColor", mBackgroundColor);

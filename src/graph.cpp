@@ -12,7 +12,7 @@
 #include <nanogui/graph.h>
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
-#if !defined(NANOGUI_DISABLE_SERIALIZATION)
+#if defined(NANOGUI_ENABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
 #endif
 
@@ -84,7 +84,7 @@ void Graph::draw(NVGcontext *ctx) {
     nvgStroke(ctx);
 }
 
-#if !defined(NANOGUI_DISABLE_SERIALIZATION)
+#if defined(NANOGUI_ENABLE_SERIALIZATION)
 void Graph::save(Serializer &s) const {
     Widget::save(s);
     s.set("caption", mCaption);

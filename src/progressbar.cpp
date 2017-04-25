@@ -11,7 +11,7 @@
 
 #include <nanogui/progressbar.h>
 #include <nanogui/opengl.h>
-#if !defined(NANOGUI_DISABLE_SERIALIZATION)
+#if defined(NANOGUI_ENABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
 #endif
 
@@ -51,7 +51,7 @@ void ProgressBar::draw(NVGcontext* ctx) {
     nvgFill(ctx);
 }
 
-#if !defined(NANOGUI_DISABLE_SERIALIZATION)
+#if defined(NANOGUI_ENABLE_SERIALIZATION)
 void ProgressBar::save(Serializer &s) const {
     Widget::save(s);
     s.set("value", mValue);

@@ -41,7 +41,7 @@ public:
     virtual Vector2i preferredSize(NVGcontext *ctx) const override;
     virtual void performLayout(NVGcontext *ctx) override;
 
-#if !defined(NANOGUI_DISABLE_SERIALIZATION)
+#if defined(NANOGUI_ENABLE_SERIALIZATION)
     virtual void save(Serializer &s) const override;
     virtual bool load(Serializer &s) override;
 #endif

@@ -236,7 +236,7 @@ public:
     /// Draw the widget (and all child widgets)
     virtual void draw(NVGcontext *ctx);
 
-#if !defined(NANOGUI_DISABLE_SERIALIZATION)
+#if defined(NANOGUI_ENABLE_SERIALIZATION)
     /// Save the state of the widget into the given \ref Serializer instance
     virtual void save(Serializer &s) const;
 

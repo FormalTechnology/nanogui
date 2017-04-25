@@ -13,7 +13,7 @@
 #include <nanogui/popup.h>
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
-#if !defined(NANOGUI_DISABLE_SERIALIZATION)
+#if defined(NANOGUI_ENABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
 #endif
 
@@ -89,7 +89,7 @@ void Popup::draw(NVGcontext* ctx) {
     Widget::draw(ctx);
 }
 
-#if !defined(NANOGUI_DISABLE_SERIALIZATION)
+#if defined(NANOGUI_ENABLE_SERIALIZATION)
 void Popup::save(Serializer &s) const {
     Window::save(s);
     s.set("anchorPos", mAnchorPos);

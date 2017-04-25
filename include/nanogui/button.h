@@ -77,7 +77,7 @@ public:
     virtual bool mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers) override;
     virtual void draw(NVGcontext *ctx) override;
 
-#if !defined(NANOGUI_DISABLE_SERIALIZATION)
+#if defined(NANOGUI_ENABLE_SERIALIZATION)
     virtual void save(Serializer &s) const override;
     virtual bool load(Serializer &s) override;
 #endif

@@ -14,7 +14,7 @@
 #include <nanogui/opengl.h>
 #include <nanogui/screen.h>
 #include <nanogui/layout.h>
-#if !defined(NANOGUI_DISABLE_SERIALIZATION)
+#if defined(NANOGUI_ENABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
 #endif
 
@@ -187,7 +187,7 @@ void Window::refreshRelativePlacement() {
     /* Overridden in \ref Popup */
 }
 
-#if !defined(NANOGUI_DISABLE_SERIALIZATION)
+#if defined(NANOGUI_ENABLE_SERIALIZATION)
 void Window::save(Serializer &s) const {
     Widget::save(s);
     s.set("title", mTitle);

@@ -15,7 +15,7 @@
 #include <nanogui/window.h>
 #include <nanogui/opengl.h>
 #include <nanogui/screen.h>
-#if !defined(NANOGUI_DISABLE_SERIALIZATION)
+#if defined(NANOGUI_ENABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
 #endif
 
@@ -218,7 +218,7 @@ void Widget::draw(NVGcontext *ctx) {
     nvgRestore(ctx);
 }
 
-#if !defined(NANOGUI_DISABLE_SERIALIZATION)
+#if defined(NANOGUI_ENABLE_SERIALIZATION)
 void Widget::save(Serializer &s) const {
     s.set("position", mPos);
     s.set("size", mSize);

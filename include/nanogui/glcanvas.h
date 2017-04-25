@@ -51,7 +51,7 @@ public:
     /// content.
     virtual void drawGL() {}
 
-#if !defined(NANOGUI_DISABLE_SERIALIZATION)
+#if defined(NANOGUI_ENABLE_SERIALIZATION)
     /// Save and load widget properties
     virtual void save(Serializer &s) const override;
     virtual bool load(Serializer &s) override;
