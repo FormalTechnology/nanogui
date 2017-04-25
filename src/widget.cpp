@@ -155,12 +155,20 @@ void Widget::addChild(Widget * widget) {
 
 void Widget::removeChild(const Widget *widget) {
     mChildren.erase(std::remove(mChildren.begin(), mChildren.end(), widget), mChildren.end());
+    if ( widget->focused() ) {
+        screen()->updateFocus(nullptr);
+        // TODO: Clear focus for any descendents who may have focus!
+    }
     widget->decRef();
 }
 
 void Widget::removeChild(int index) {
     Widget *widget = mChildren[index];
     mChildren.erase(mChildren.begin() + index);
+    if ( widget->focused() ) {
+        screen()->updateFocus(nullptr);
+        // TODO: Clear focus for any descendents who may have focus!
+    }
     widget->decRef();
 }
 
@@ -171,26 +179,34 @@ int Widget::childIndex(Widget *widget) const {
     return (int)(it - mChildren.begin());
 }
 
-Window *Widget::window() {
-    Widget *widget = this;
+Window *Widget::window() const {
+    const Widget *widget = this;
     while (true) {
         if (!widget)
             throw std::runtime_error(
                 "Widget:internal error (could not find parent window)");
-        Window *window = dynamic_cast<Window *>(widget);
+        const Window *window = dynamic_cast<const Window *>(widget);
         if (window)
-            return window;
+            return (Window *)window;
+        widget = widget->parent();
+    }
+}
+
+Screen *Widget::screen() const {
+    const Widget *widget = this;
+    while (true) {
+        if (!widget)
+            throw std::runtime_error(
+                "Widget:internal error (could not find parent screen)");
+        const Screen *screen = dynamic_cast<const Screen *>(widget);
+        if (screen)
+            return (Screen *)screen;
         widget = widget->parent();
     }
 }
 
 void Widget::requestFocus() {
-    Widget *widget = this;
-    while (widget->parent())
-        widget = widget->parent();
-    Screen *screen = dynamic_cast<Screen *>(widget);
-    if (screen)
-        screen->updateFocus(this);
+    screen()->updateFocus(this);
 }
 
 void Widget::draw(NVGcontext *ctx) {
