@@ -26,12 +26,10 @@ NAMESPACE_BEGIN(nanogui)
  */
 class NANOGUI_EXPORT Theme : public Object {
 public:
-    Theme(NVGcontext *ctx);
+    /// Initialize theme (fonts).
+    static void initialize(NVGcontext *ctx);
 
-    /* Fonts */
-    int mFontNormal;
-    int mFontBold;
-    int mFontIcons;
+    Theme();
 
     /* Spacing-related parameters */
     int mStandardFontSize;

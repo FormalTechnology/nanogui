@@ -17,7 +17,7 @@
 
 NAMESPACE_BEGIN(nanogui)
 
-Theme::Theme(NVGcontext *ctx) {
+Theme::Theme() {
     mStandardFontSize                 = 16;
     mButtonFontSize                   = 20;
     mTextBoxFontSize                  = 20;
@@ -63,18 +63,16 @@ Theme::Theme(NVGcontext *ctx) {
 
     mWindowPopup                      = Color(50, 255);
     mWindowPopupTransparent           = Color(50, 0);
+}
 
-    if ( nvgFindFont(ctx, "sans") == -1 ) {
-        mFontNormal = nvgCreateFontMem(ctx, "sans", roboto_regular_ttf, roboto_regular_ttf_size, 0);
-    }
-    if ( nvgFindFont(ctx, "sans-bold") == -1 ) {
-        mFontBold   = nvgCreateFontMem(ctx, "sans-bold", roboto_bold_ttf, roboto_bold_ttf_size, 0);
-    }
-    if ( nvgFindFont(ctx, "icons") == -1 ) {
-        mFontIcons  = nvgCreateFontMem(ctx, "icons", entypo_ttf, entypo_ttf_size, 0);
-    }
+void Theme::initialize(NVGcontext *ctx) {
+    int fontNormal = nvgCreateFontMem(ctx, "sans", roboto_regular_ttf, roboto_regular_ttf_size, 0);
 
-    if (mFontNormal == -1 || mFontBold == -1 || mFontIcons == -1)
+    int fontBold   = nvgCreateFontMem(ctx, "sans-bold", roboto_bold_ttf, roboto_bold_ttf_size, 0);
+
+    int fontIcons  = nvgCreateFontMem(ctx, "icons", entypo_ttf, entypo_ttf_size, 0);
+
+    if (fontNormal == -1 || fontBold == -1 || fontIcons == -1)
         throw std::runtime_error("Could not load fonts!");
 }
 

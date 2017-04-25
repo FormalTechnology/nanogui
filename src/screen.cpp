@@ -64,8 +64,11 @@ void Screen::initialize(const Vector2i& size) {
         throw std::runtime_error("Screen has null NVGcontext!");
     }
 
+    // Initialize fonts
+    Theme::initialize(mNVGContext);
+
     mVisible = true;
-    mTheme = new Theme( mNVGContext );
+    mTheme = new Theme();
     mMousePos = Vector2i::Zero();
     mMouseState = mModifiers = 0;
     mDragActive = false;
@@ -344,8 +347,11 @@ void Screen::initialize(GLFWwindow *window, bool shutdownGLFWOnDestruct) {
     if (mNVGContext == nullptr)
         throw std::runtime_error("Could not initialize NanoVG!");
 
+    // Initialize fonts
+    Theme::initialize(mNVGContext);
+
     mVisible = glfwGetWindowAttrib(window, GLFW_VISIBLE) != 0;
-    setTheme(new Theme(mNVGContext));
+    setTheme(new Theme());
     mMousePos = Vector2i::Zero();
     mMouseState = mModifiers = 0;
     mDragActive = false;
