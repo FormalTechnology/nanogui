@@ -18,11 +18,11 @@
 
 NAMESPACE_BEGIN(nanogui)
 
-Button::Button(Widget *parent, const std::string &caption, int icon, bool centerText)
+Button::Button(Widget *parent, const std::string &caption, int icon)
     : Widget(parent), mCaption(caption), mIcon(icon),
       mIconPosition(IconPosition::LeftCentered), mPushed(false),
       mFlags(NormalButton), mBackgroundColor(Color(0, 0)),
-      mTextColor(Color(0, 0)), mCenterText(centerText) { }
+      mTextColor(Color(0, 0)), mTextTruncation(TextTruncation::None), mCenterText(true) { }
 
 Vector2i Button::preferredSize(NVGcontext *ctx) const {
     int fontSize = mFontSize == -1 ? mTheme->mButtonFontSize : mFontSize;
@@ -108,6 +108,8 @@ bool Button::mouseButtonEvent(const Vector2i &p, int button, bool down, int modi
 void Button::draw(NVGcontext *ctx) {
     Widget::draw(ctx);
 
+    static const int kSpacing = 8;
+
     NVGcolor gradTop = mTheme->mButtonGradientTopUnfocused;
     NVGcolor gradBot = mTheme->mButtonGradientBotUnfocused;
 
@@ -155,23 +157,16 @@ void Button::draw(NVGcontext *ctx) {
     nvgStroke(ctx);
 
     int fontSize = mFontSize == -1 ? mTheme->mButtonFontSize : mFontSize;
+    const char* fontFace = "sans-bold";
     nvgFontSize(ctx, fontSize);
-    nvgFontFace(ctx, "sans-bold");
+    nvgFontFace(ctx, fontFace);
     float tw = nvgTextBounds(ctx, 0,0, mCaption.c_str(), nullptr, nullptr);
 
-    Vector2f center = mPos.cast<float>() + mSize.cast<float>() * 0.5f;
-    Vector2f textPos(mCenterText ? center.x() - tw * 0.5f : mPos.x() + fontSize/2, center.y() - 1);
-    if(!mCenterText)
-        nvgIntersectScissor(ctx, textPos.x(), mPos.y(), mSize.x()-fontSize, mSize.y());
-    NVGcolor textColor =
-        mTextColor.w() == 0 ? mTheme->mTextColor : mTextColor;
-    if (!mEnabled)
-        textColor = mTheme->mDisabledTextColor;
-
+    float iw = 0.0, ih = 0.0;
     if (mIcon) {
         auto icon = utf8(mIcon);
 
-        float iw, ih = fontSize;
+        ih = fontSize;
         if (nvgIsFontIcon(mIcon)) {
             ih *= 1.5f;
             nvgFontSize(ctx, ih);
@@ -185,6 +180,24 @@ void Button::draw(NVGcontext *ctx) {
         }
         if (mCaption != "")
             iw += mSize.y() * 0.15f;
+    }
+
+    nvgFontSize(ctx, fontSize);
+    nvgFontFace(ctx, fontFace);
+
+    int availableWidth = width() - iw - kSpacing * 2;
+    std::string caption = truncateText(ctx, mCaption, mTextTruncation, availableWidth);
+
+    Vector2f center = mPos.cast<float>() + mSize.cast<float>() * 0.5f;
+    Vector2f textPos(mCenterText ? center.x() - tw * 0.5f : mPos.x() + fontSize/2, center.y() - 1);
+    NVGcolor textColor =
+        mTextColor.w() == 0 ? mTheme->mTextColor : mTextColor;
+    if (!mEnabled)
+        textColor = mTheme->mDisabledTextColor;
+
+    if (mIcon) {
+        auto icon = utf8(mIcon);
+
         nvgFillColor(ctx, textColor);
         nvgTextAlign(ctx, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
         Vector2f iconPos = center;
@@ -197,12 +210,16 @@ void Button::draw(NVGcontext *ctx) {
             textPos.x() -= iw * 0.5f;
             iconPos.x() += tw * 0.5f;
         } else if (mIconPosition == IconPosition::Left) {
-            iconPos.x() = mPos.x() + 8;
+            iconPos.x() = mPos.x() + kSpacing;
+            if (!mCenterText)
+                textPos.x() = iconPos.x() + iw;
         } else if (mIconPosition == IconPosition::Right) {
-            iconPos.x() = mPos.x() + mSize.x() - iw - 8;
+            iconPos.x() = mPos.x() + mSize.x() - iw - kSpacing;
         }
 
         if (nvgIsFontIcon(mIcon)) {
+            nvgFontSize(ctx, ih);
+            nvgFontFace(ctx, "icons");
             nvgText(ctx, iconPos.x(), iconPos.y()+1, icon.data(), nullptr);
         } else {
             NVGpaint imgPaint = nvgImagePattern(ctx,
@@ -214,15 +231,18 @@ void Button::draw(NVGcontext *ctx) {
     }
 
     nvgFontSize(ctx, fontSize);
-    nvgFontFace(ctx, "sans-bold");
+    nvgFontFace(ctx, fontFace);
     nvgTextAlign(ctx, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgFillColor(ctx, mTheme->mTextColorShadow);
-    nvgText(ctx, textPos.x(), textPos.y(), mCaption.c_str(), nullptr);
+    nvgText(ctx, textPos.x(), textPos.y(), caption.c_str(), nullptr);
     nvgFillColor(ctx, textColor);
-    nvgText(ctx, textPos.x(), textPos.y() + 1, mCaption.c_str(), nullptr);
+    nvgText(ctx, textPos.x(), textPos.y() + 1, caption.c_str(), nullptr);
+}
 
-    if(!mCenterText)
-        nvgResetScissor(ctx);
+void Button::setCenterText(bool center) {
+    mCenterText = center;
+    if (!center)
+        mIconPosition = IconPosition::Left;
 }
 
 #if defined(NANOGUI_ENABLE_SERIALIZATION)
@@ -235,6 +255,8 @@ void Button::save(Serializer &s) const {
     s.set("flags", mFlags);
     s.set("backgroundColor", mBackgroundColor);
     s.set("textColor", mTextColor);
+    s.set("textTruncation", mTextTruncation);
+    s.set("centerText", mCenterText);
 }
 
 bool Button::load(Serializer &s) {
@@ -246,6 +268,8 @@ bool Button::load(Serializer &s) {
     if (!s.get("flags", mFlags)) return false;
     if (!s.get("backgroundColor", mBackgroundColor)) return false;
     if (!s.get("textColor", mTextColor)) return false;
+    if (!s.get("textTruncation", mTextTruncation)) return false;
+    if (!s.get("centerText", mCenterText)) return false;
     return true;
 }
 #endif

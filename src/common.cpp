@@ -213,6 +213,41 @@ loadImageDirectory(NVGcontext *ctx, const std::string &path) {
     return result;
 }
 
+std::string truncateText(NVGcontext *ctx, const std::string &text, TextTruncation truncation, int availableWidth) {
+    if (truncation == TextTruncation::None || text.length() < 4)
+        return text;
+
+    float tw = nvgTextBounds(ctx, 0.0, 0.0, text.c_str(), nullptr, nullptr);
+    if ( tw <= availableWidth )
+        return text;
+
+    std::string result = text;
+    size_t len = text.length();
+    size_t offset = 0;
+    const std::string ellipsis = "\u2026";
+
+    while (len - offset > 1 && tw > availableWidth) {
+        ++offset;
+
+        if (truncation == TextTruncation::Head) {
+            result = ellipsis + text.substr(offset, len - offset);
+        }
+        else if (truncation == TextTruncation::Middle) {
+            size_t middle = len / 2;
+            result = text.substr(0, middle - offset) + ellipsis + text.substr(middle + offset - 1, len - (middle + offset - 1));
+        }
+        else if (truncation == TextTruncation::Tail) {
+            result = text.substr(0, len - offset) + ellipsis;
+        }
+        else {
+            throw std::runtime_error("Unknown TextTruncation");
+        }
+        tw = nvgTextBounds(ctx, 0, 0, result.c_str(), nullptr, nullptr);
+    }
+
+    return result;
+}
+
 #if !defined(__APPLE__)
 std::string file_dialog(const std::vector<std::pair<std::string, std::string>> &filetypes, bool save) {
 #define FILE_DIALOG_MAX_BUFFER 1024

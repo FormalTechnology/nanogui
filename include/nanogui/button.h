@@ -15,6 +15,9 @@
 #include <nanogui/widget.h>
 
 NAMESPACE_BEGIN(nanogui)
+
+enum class TextTruncation;
+
 /**
  * \class Button button.h nanogui/button.h
  *
@@ -38,7 +41,7 @@ public:
         Right
     };
 
-    Button(Widget *parent, const std::string &caption = "Untitled", int icon = 0, bool centerText = true);
+    Button(Widget *parent, const std::string &caption = "Untitled", int icon = 0);
 
     const std::string &caption() const { return mCaption; }
     void setCaption(const std::string &caption) { mCaption = caption; }
@@ -49,11 +52,17 @@ public:
     const Color &textColor() const { return mTextColor; }
     void setTextColor(const Color &textColor) { mTextColor = textColor; }
 
+    TextTruncation textTruncation() const { return mTextTruncation; }
+    void setTextTruncation(TextTruncation truncation) { mTextTruncation = truncation; }
+
     int icon() const { return mIcon; }
     void setIcon(int icon) { mIcon = icon; }
 
     int flags() const { return mFlags; }
     void setFlags(int buttonFlags) { mFlags = buttonFlags; }
+
+    bool centerText() const { return mCenterText; }
+    void setCenterText(bool center);
 
     IconPosition iconPosition() const { return mIconPosition; }
     void setIconPosition(IconPosition iconPosition) { mIconPosition = iconPosition; }
@@ -89,6 +98,7 @@ protected:
     int mFlags;
     Color mBackgroundColor;
     Color mTextColor;
+    TextTruncation mTextTruncation;
     std::function<void()> mCallback;
     std::function<void(bool)> mChangeCallback;
     std::vector<Button *> mButtonGroup;

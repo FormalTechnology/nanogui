@@ -59,12 +59,15 @@ void Label::draw(NVGcontext *ctx) {
     nvgFontFace(ctx, mFont.c_str());
     nvgFontSize(ctx, fontSize());
     nvgFillColor(ctx, mColor);
+
+    std::string caption = truncateText(ctx, mCaption, mTextTruncation, width());
+
     if (mFixedSize.x() > 0) {
         nvgTextAlign(ctx, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-        nvgTextBox(ctx, mPos.x(), mPos.y(), mFixedSize.x(), mCaption.c_str(), nullptr);
+        nvgTextBox(ctx, mPos.x(), mPos.y(), mFixedSize.x(), caption.c_str(), nullptr);
     } else {
         nvgTextAlign(ctx, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        nvgText(ctx, mPos.x(), mPos.y() + mSize.y() * 0.5f, mCaption.c_str(), nullptr);
+        nvgText(ctx, mPos.x(), mPos.y() + mSize.y() * 0.5f, caption.c_str(), nullptr);
     }
 }
 
@@ -74,6 +77,7 @@ void Label::save(Serializer &s) const {
     s.set("caption", mCaption);
     s.set("font", mFont);
     s.set("color", mColor);
+    s.set("textTruncation", mTextTruncation);
 }
 
 bool Label::load(Serializer &s) {
@@ -81,6 +85,7 @@ bool Label::load(Serializer &s) {
     if (!s.get("caption", mCaption)) return false;
     if (!s.get("font", mFont)) return false;
     if (!s.get("color", mColor)) return false;
+    if (!s.get("textTruncation", mTextTruncation)) return false;
     return true;
 }
 #endif
