@@ -310,6 +310,9 @@ void GridLayout::performLayout(NVGcontext *ctx, Widget *widget) const {
 
     /* Strech to size provided by \c widget */
     for (int i = 0; i < 2; i++) {
+        if (mStretch[i] == 0)
+            continue;
+
         int gridSize = 2 * mMargin + extra[i];
         for (int s : grid[i]) {
             gridSize += s;
@@ -357,7 +360,7 @@ void GridLayout::performLayout(NVGcontext *ctx, Widget *widget) const {
             for (int j = 0; j < 2; j++) {
                 int axis = (axis1 + j) % 2;
                 int item = j == 0 ? i1 : i2;
-                Alignment align = alignment(axis, item);
+                Alignment align = alignment((Orientation)axis, item);
 
                 switch (align) {
                     case Alignment::Minimum:

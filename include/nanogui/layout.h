@@ -157,7 +157,8 @@ public:
                int margin = 0, int spacing = 0)
         : mOrientation(orientation), mResolution(resolution), mMargin(margin) {
         mDefaultAlignment[0] = mDefaultAlignment[1] = alignment;
-        mSpacing = Vector2i::Constant(spacing);
+        mSpacing[0] = mSpacing[1] = spacing;
+        mStretch[0] = mStretch[1] = 1;
     }
 
     Orientation orientation() const { return mOrientation; }
@@ -168,18 +169,24 @@ public:
     int resolution() const { return mResolution; }
     void setResolution(int resolution) { mResolution = resolution; }
 
-    int spacing(int axis) const { return mSpacing[axis]; }
-    void setSpacing(int axis, int spacing) { mSpacing[axis] = spacing; }
+    int spacing(Orientation axis) const { return mSpacing[(int)axis]; }
+    void setSpacing(Orientation axis, int spacing) { mSpacing[(int)axis] = spacing; }
     void setSpacing(int spacing) { mSpacing[0] = mSpacing[1] = spacing; }
 
     int margin() const { return mMargin; }
     void setMargin(int margin) { mMargin = margin; }
 
-    Alignment alignment(int axis, int item) const {
-        if (item < (int) mAlignment[axis].size())
-            return mAlignment[axis][item];
+    // Normally the grid layout's widget is expanded to fit the parent widget.
+    // To restrict stretch in one or both dimensions, set to 0.
+    int stretch(Orientation axis) const { return mStretch[(int)axis]; }
+    void setStretch(Orientation axis, int stretch) { mStretch[(int)axis] = stretch; }
+    void setStretch(int stretch) { mStretch[0] = mStretch[1] = stretch; }
+
+    Alignment alignment(Orientation axis, int item) const {
+        if (item < (int) mAlignment[(int)axis].size())
+            return mAlignment[(int)axis][item];
         else
-            return mDefaultAlignment[axis];
+            return mDefaultAlignment[(int)axis];
     }
 
     void setColAlignment(Alignment value) { mDefaultAlignment[0] = value; }
@@ -198,10 +205,11 @@ protected:
 
 protected:
     Orientation mOrientation;
+    int mResolution;
     Alignment mDefaultAlignment[2];
     std::vector<Alignment> mAlignment[2];
-    int mResolution;
-    Vector2i mSpacing;
+    int mSpacing[2];
+    int mStretch[2];
     int mMargin;
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
