@@ -48,11 +48,17 @@ Screen::Screen() : Widget(nullptr),
                    mCursor(Cursor::Arrow) {
 }
 
-void Screen::initialize(const Vector2i& size, NVGcontext * ctx ) {
+void Screen::initialize(const Vector2i& size) {
     mPixelRatio = 1.0;
     mFBSize = size;
     setSize(size);
-    mNVGContext = ctx;
+
+    int flags = NVG_STENCIL_STROKES | NVG_ANTIALIAS;
+#if defined(DEBUG)
+    flags |= NVG_DEBUG;
+#endif
+
+    mNVGContext = nvgCreateGL2(flags);
 
     if (mNVGContext == nullptr) {
         throw std::runtime_error("Screen has null NVGcontext!");
@@ -69,6 +75,9 @@ void Screen::initialize(const Vector2i& size, NVGcontext * ctx ) {
 }
 
 Screen::~Screen() {
+    if ( mNVGContext ) {
+        nvgDeleteGL2(mNVGContext);
+    }
 }
 
 #else
@@ -526,7 +535,7 @@ bool Screen::resizeEvent(const Vector2i& size) {
 bool Screen::cursorPosCallbackEvent(double x, double y) {
     Vector2i p((int) x, (int) y);
 
-#if defined(_WIN32) || defined(__linux__) || defined(NANOGUI_FAKEGLFW)
+#if defined(_WIN32) || defined(__linux__)
     p /= mPixelRatio;
 #endif
 
@@ -667,7 +676,7 @@ bool Screen::resizeCallbackEvent(int, int) {
     glfwGetWindowSize(mGLFWWindow, &size[0], &size[1]);
 #endif
 
-#if defined(_WIN32) || defined(__linux__) || defined(NANOGUI_FAKEGLFW)
+#if defined(_WIN32) || defined(__linux__)
     size /= mPixelRatio;
 #endif
 

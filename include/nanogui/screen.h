@@ -170,7 +170,7 @@ public:
 
     /// Initialize the \ref Screen
 #if defined(NANOGUI_FAKEGLFW)
-    void initialize(const Vector2i& size, NVGcontext * ctx);
+    void initialize(const Vector2i& size);
 #else
     void initialize(GLFWwindow *window, bool shutdownGLFWOnDestruct);
 #endif
