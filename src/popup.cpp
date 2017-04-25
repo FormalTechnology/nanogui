@@ -13,6 +13,7 @@
 #include <nanogui/popup.h>
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
+#include <nanogui/screen.h>
 #if defined(NANOGUI_ENABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
 #endif
