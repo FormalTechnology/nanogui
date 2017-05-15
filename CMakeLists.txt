@@ -80,7 +80,7 @@ endif()
 
 # Compile GLFW
 if (NANOGUI_FAKEGLFW)
-    add_definitions(-DNANOGUI_FAKEGLFW)
+    add_definitions(-DNANOGUI_FAKEGLFW -DNANOVG_GL2_IMPLEMENTATION)
     add_library(glfw_objects OBJECT src/fakeglfw.mm)
 else()
     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw" "ext_build/glfw")
@@ -315,6 +315,7 @@ add_definitions(${NANOGUI_EXTRA_DEFS})
 add_library(nanogui-obj OBJECT
   # Merge NanoVG into the NanoGUI library
   ext/nanovg/src/nanovg.c
+  ext/nanovg/src/nanovg_gl.c
   # Merge GLAD into the NanoGUI library (only if needed)
   ${LIBNANOGUI_EXTRA_SOURCE}
   # Fonts etc.
