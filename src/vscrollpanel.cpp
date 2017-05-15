@@ -64,7 +64,19 @@ void VScrollPanel::performLayout(NVGcontext *ctx) {
 Vector2i VScrollPanel::preferredSize(NVGcontext *ctx) const {
     if (mChildren.empty())
         return Vector2i::Zero();
-    return mChildren[0]->preferredSize(ctx) + Vector2i(12, 0);
+
+    Vector2i size = mChildren[0]->preferredSize(ctx) + Vector2i(kScrollerWidth, 0);
+
+    // Can never be larger than our parent - we're a scrollview!
+    const Widget *parent = this->parent();
+    if (parent) {
+        Vector2i pos = position();
+        if (pos.x() < parent->width())
+            size.x() = std::min(size.x(), parent->width() - pos.x());
+        if (pos.y() < parent->height())
+            size.y() = std::min(size.y(), parent->height() - pos.y());
+    }
+    return size;
 }
 
 bool VScrollPanel::mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers)
