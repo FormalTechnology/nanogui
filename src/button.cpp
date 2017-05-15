@@ -156,11 +156,8 @@ void Button::draw(NVGcontext *ctx) {
     nvgStrokeColor(ctx, mTheme->mBorderDark);
     nvgStroke(ctx);
 
-    int fontSize = mFontSize == -1 ? mTheme->mButtonFontSize : mFontSize;
+    const int fontSize = mFontSize == -1 ? mTheme->mButtonFontSize : mFontSize;
     const char* fontFace = "sans-bold";
-    nvgFontSize(ctx, fontSize);
-    nvgFontFace(ctx, fontFace);
-    float tw = nvgTextBounds(ctx, 0,0, mCaption.c_str(), nullptr, nullptr);
 
     float iw = 0.0, ih = 0.0;
     if (mIcon) {
@@ -188,6 +185,7 @@ void Button::draw(NVGcontext *ctx) {
     int availableWidth = width() - iw - kSpacing * 2;
     std::string caption = truncateText(ctx, mCaption, mTextTruncation, availableWidth);
 
+    float tw = nvgTextBounds(ctx, 0,0, caption.c_str(), nullptr, nullptr);
     Vector2f center = mPos.cast<float>() + mSize.cast<float>() * 0.5f;
     Vector2f textPos(mCenterText ? center.x() - tw * 0.5f : mPos.x() + fontSize/2, center.y() - 1);
     NVGcolor textColor =
