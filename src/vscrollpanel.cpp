@@ -19,8 +19,13 @@
 
 NAMESPACE_BEGIN(nanogui)
 
+static const int kScrollerWidth = 12;
+
 VScrollPanel::VScrollPanel(Widget *parent)
-    : Widget(parent), mChildPreferredHeight(0), mScroll(0.0f), mUpdateLayout(false) { }
+    : Widget(parent), mChildPreferredHeight(0), mScroll(0.0f), mUpdateLayout(false),
+      mScrollerGradient(Color(220, 100), Color(128, 100)),
+      mTrackGradient(Color(0, 32), Color(0, 92))
+{ }
 
 int VScrollPanel::scrollerHeight() const {
     return height() * std::min(1.0f, height() / (float)mChildPreferredHeight);
@@ -47,10 +52,10 @@ void VScrollPanel::performLayout(NVGcontext *ctx) {
 
     if (mChildPreferredHeight > mSize.y()) {
         child->setPosition(Vector2i(0, -mScroll*(mChildPreferredHeight - mSize.y())));
-        child->setSize(Vector2i(mSize.x()-12, mChildPreferredHeight));
+        child->setSize(Vector2i(mSize.x() - kScrollerWidth, mChildPreferredHeight));
     } else {
         child->setPosition(Vector2i::Zero());
-        child->setSize(mSize);
+        child->setSize(Vector2i(mSize.x() - kScrollerWidth, mSize.y()));
         mScroll = 0;
     }
     child->performLayout(ctx);
@@ -65,7 +70,7 @@ Vector2i VScrollPanel::preferredSize(NVGcontext *ctx) const {
 bool VScrollPanel::mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers)
 {
     if (down
-        && p.x() > (mPos.x() + mSize.x() - 12 - 1)
+        && p.x() > (mPos.x() + mSize.x() - kScrollerWidth - 1)
         && !mChildren.empty() && mChildPreferredHeight > mSize.y())
     {
         float scrollh = scrollerHeight();
@@ -113,7 +118,6 @@ void VScrollPanel::draw(NVGcontext *ctx) {
     Widget *child = mChildren[0];
     child->setPosition(Vector2i(0, -mScroll*(mChildPreferredHeight - mSize.y())));
     mChildPreferredHeight = child->preferredSize(ctx).y();
-    float scrollh = scrollerHeight();
 
     if (mUpdateLayout)
         child->performLayout(ctx);
@@ -129,21 +133,23 @@ void VScrollPanel::draw(NVGcontext *ctx) {
         return;
 
     NVGpaint paint = nvgBoxGradient(
-        ctx, mPos.x() + mSize.x() - 12 + 1, mPos.y() + 4 + 1, 8,
-        mSize.y() - 8, 3, 4, Color(0, 32), Color(0, 92));
+        ctx, mPos.x() + mSize.x() - kScrollerWidth + 1, mPos.y() + 4 + 1, 8,
+        mSize.y() - 8, 3, 4, mTrackGradient.first, mTrackGradient.second);
     nvgBeginPath(ctx);
-    nvgRoundedRect(ctx, mPos.x() + mSize.x() - 12, mPos.y() + 4, 8,
+    nvgRoundedRect(ctx, mPos.x() + mSize.x() - kScrollerWidth, mPos.y() + 4, 8,
                    mSize.y() - 8, 3);
     nvgFillPaint(ctx, paint);
     nvgFill(ctx);
 
+    float scrollh = scrollerHeight();
+
     paint = nvgBoxGradient(
-        ctx, mPos.x() + mSize.x() - 12 - 1,
+        ctx, mPos.x() + mSize.x() - kScrollerWidth - 1,
         mPos.y() + 4 + (mSize.y() - 8 - scrollh) * mScroll - 1, 8, scrollh,
-        3, 4, Color(220, 100), Color(128, 100));
+        3, 4, mScrollerGradient.first, mScrollerGradient.second);
 
     nvgBeginPath(ctx);
-    nvgRoundedRect(ctx, mPos.x() + mSize.x() - 12 + 1,
+    nvgRoundedRect(ctx, mPos.x() + mSize.x() - kScrollerWidth + 1,
                    mPos.y() + 4 + 1 + (mSize.y() - 8 - scrollh) * mScroll, 8 - 2,
                    scrollh - 2, 2);
     nvgFillPaint(ctx, paint);

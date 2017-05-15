@@ -34,6 +34,14 @@ public:
     virtual bool scrollEvent(const Vector2i &p, const Vector2f &rel) override;
     virtual void draw(NVGcontext *ctx) override;
 
+    /// Custom scroller color gradient.
+    std::pair<Color, Color> scrollerColors() { return mScrollerGradient; }
+    void setScrollerColors(const std::pair<Color, Color> &colors) { mScrollerGradient = colors; }
+
+    /// Custom scroller track color gradient.
+    std::pair<Color, Color> trackColors() { return mTrackGradient; }
+    void setTrackColors(const std::pair<Color, Color> &colors) { mTrackGradient = colors; }
+
 #if defined(NANOGUI_ENABLE_SERIALIZATION)
     virtual void save(Serializer &s) const override;
     virtual bool load(Serializer &s) override;
@@ -47,6 +55,9 @@ protected:
     int mChildPreferredHeight;
     float mScroll;
     bool mUpdateLayout;
+
+    std::pair<Color, Color> mScrollerGradient;
+    std::pair<Color, Color> mTrackGradient;
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
