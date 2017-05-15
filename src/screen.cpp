@@ -31,10 +31,8 @@
 #  include <GLFW/glfw3native.h>
 #endif
 
-/* Allow enforcing the GL2 implementation of NanoVG */
-#if defined(NANOGUI_FAKEGLFW)
-#define NANOVG_GL2_IMPLEMENTATION
-#else
+/* Allow enforcing the GL3 implementation of NanoVG */
+#if !defined(NANOVG_GL2_IMPLEMENTATION)
 #define NANOVG_GL3_IMPLEMENTATION
 #endif
 
