@@ -108,8 +108,12 @@ void Popup::draw(NVGcontext* ctx) {
     /* Draw window */
     nvgBeginPath(ctx);
     nvgRoundedRect(ctx, mPos.x(), mPos.y(), mSize.x(), mSize.y(), cr);
+    nvgFillColor(ctx, mTheme->mWindowPopup);
+    nvgFill(ctx);
 
     if(mShowArrow) {
+        nvgBeginPath(ctx);
+
         Vector2i base = mPos;
         if (mSide == Side::Left || mSide == Side::Right) {
             base += Vector2i(0, actualAnchorOffset());
@@ -134,13 +138,13 @@ void Popup::draw(NVGcontext* ctx) {
             }
 
             nvgMoveTo(ctx, base.x(), base.y() + kArrowSize*sign);
-            nvgLineTo(ctx, base.x() - kArrowSize, base.y() - 1*sign);
             nvgLineTo(ctx, base.x() + kArrowSize, base.y() - 1*sign);
+            nvgLineTo(ctx, base.x() - kArrowSize, base.y() - 1*sign);
         }
+
+        nvgFill(ctx);
     }
 
-    nvgFillColor(ctx, mTheme->mWindowPopup);
-    nvgFill(ctx);
     nvgRestore(ctx);
 
     Widget::draw(ctx);
