@@ -16,6 +16,7 @@
 #include <stdint.h>
 #include <array>
 #include <vector>
+#include <algorithm>
 
 /* Set to 1 to draw boxes around widgets */
 //#define NANOGUI_SHOW_WIDGET_BOUNDS 1

@@ -9,11 +9,11 @@
     BSD-style license that can be found in the LICENSE.txt file.
 */
 
-#include <nanogui/screen.h>
-
 #if defined(_WIN32)
 #include <windows.h>
 #endif
+
+#include <nanogui/screen.h>
 
 #include <nanogui/opengl.h>
 #include <map>
@@ -21,6 +21,7 @@
 #include <chrono>
 #include <iostream>
 #include <algorithm>
+#include <cctype>
 
 #if !defined(_WIN32)
     #include <locale.h>
