@@ -32,8 +32,12 @@
 #endif // DOXYGEN_SHOULD_SKIP_THIS
 
 #if defined(NANOGUI_FAKEGLFW)
+#ifdef _WIN32
+    #include <LGWinGL.h>
+#else
     #include <OpenGL/gl.h>
-    #include <nanogui/fakeglfw.h>
+#endif
+#include <nanogui/fakeglfw.h>
 #else
     #include <GLFW/glfw3.h>
 #endif
