@@ -6,13 +6,39 @@
 //  Copyright © 2015 Formal Technology. All rights reserved.
 //
 
-#import <nanogui/fakeglfw.h>
-#import <mach/mach_time.h>
-#import <Cocoa/Cocoa.h>
+#include <nanogui/fakeglfw.h>
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#else
+#include <mach/mach_time.h>
+#endif
+#include <string.h>
+#include <cstdint>
 
 static short int  publicKeys[256];
 // Cocoa-specific global timer data
 //
+#ifdef _WIN32
+static uint64_t getRawTime(void)
+{
+    return GetTickCount();
+}
+static uint64_t basetime;
+void glfwInitTimer(void)
+{
+    basetime = getRawTime();
+}
+double glfwGetTime(void)
+{
+    return (getRawTime() - basetime) / 1000.0;
+}
+void glfwSetTime(double time)
+{
+    basetime = time * 1000.0;
+}
+#else
+
 typedef struct _GLFWtimeNS
 {
     double          base;
@@ -20,7 +46,6 @@ typedef struct _GLFWtimeNS
 
 } _GLFWtimeNS;
 
-static char * clipboardString;
 static _GLFWtimeNS ns_time;
 
 // Return raw time
@@ -52,39 +77,7 @@ void glfwSetTime(double time)
     (uint64_t) (time / ns_time.resolution);
 }
 
-#pragma mark - Clipboard
-
-void glfwSetClipboardString(GLFWwindow * w, const char *string)
-{
-    NSArray * types = [NSArray arrayWithObjects:NSStringPboardType, nil];
-
-    NSPasteboard * pasteboard = [NSPasteboard generalPasteboard];
-    [pasteboard declareTypes:types owner:nil];
-    [pasteboard setString:[NSString stringWithUTF8String:string]
-                  forType:NSStringPboardType];
-}
-
-const char* glfwGetClipboardString(GLFWwindow *w)
-{
-    NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
-
-    if (![[pasteboard types] containsObject:NSStringPboardType]) {
-        NSLog(@"Cocoa: Failed to retrieve string from pasteboard");
-        return NULL;
-    }
-
-    NSString* object = [pasteboard stringForType:NSStringPboardType];
-
-    if (!object) {
-        NSLog(@"Cocoa: Failed to retrieve object from pasteboard");
-        return NULL;
-    }
-
-    free(clipboardString);
-    clipboardString = strdup([object UTF8String]);
-
-    return clipboardString;
-}
+#endif
 
 // Create key code translation tables
 //
@@ -215,20 +208,4 @@ int translateKey(unsigned int key)
     }
 
     return publicKeys[key];
-}
-
-int translateFlags(NSUInteger flags)
-{
-    int mods = 0;
-
-    if (flags & NSShiftKeyMask)
-        mods |= GLFW_MOD_SHIFT;
-    if (flags & NSControlKeyMask)
-        mods |= GLFW_MOD_CONTROL;
-    if (flags & NSAlternateKeyMask)
-        mods |= GLFW_MOD_ALT;
-    if (flags & NSCommandKeyMask)
-        mods |= GLFW_MOD_SUPER;
-
-    return mods;
 }
