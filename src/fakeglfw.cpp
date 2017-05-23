@@ -22,7 +22,7 @@ static short int  publicKeys[256];
 #ifdef _WIN32
 static uint64_t getRawTime(void)
 {
-    return GetTickCount();
+    return GetTickCount64();
 }
 static uint64_t basetime;
 void glfwInitTimer(void)
