@@ -26,9 +26,11 @@
 #  define WIN32_LEAN_AND_MEAN
 #  include <windows.h>
 
+#if !defined(NANOGUI_FAKEGLFW)
 #  define GLFW_EXPOSE_NATIVE_WGL
 #  define GLFW_EXPOSE_NATIVE_WIN32
-//#  include <GLFW/glfw3native.h>
+#  include <GLFW/glfw3native.h>
+#endif
 #endif
 
 /* Allow enforcing the GL3 implementation of NanoVG */
@@ -706,19 +708,18 @@ void Screen::updateFocus(Widget *widget) {
         w->focusEvent(false);
     }
     mFocusPath.clear();
-    Window *window = nullptr;
-    while ( widget ) {
-        mFocusPath.push_back( widget );
-        Window *maybe_window = dynamic_cast<Window *>(widget);
-        if ( maybe_window )
-            window = maybe_window;
+    Widget *window = nullptr;
+    while (widget) {
+        mFocusPath.push_back(widget);
+        if (dynamic_cast<Window *>(widget))
+            window = widget;
         widget = widget->parent();
     }
     for (auto it = mFocusPath.rbegin(); it != mFocusPath.rend(); ++it)
         (*it)->focusEvent(true);
 
     if (window)
-        moveWindowToFront(window);
+        moveWindowToFront((Window *) window);
 }
 
 void Screen::disposeWindow(Window *window) {

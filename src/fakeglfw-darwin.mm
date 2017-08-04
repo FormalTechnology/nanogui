@@ -14,7 +14,7 @@ static char * clipboardString;
 
 #pragma mark - Clipboard
 
-void glfwSetClipboardString(GLFWwindow * w, const char *string)
+void glfwSetClipboardString(GLFWwindow * /*w*/, const char *string)
 {
     NSPasteboard * pasteboard = [NSPasteboard generalPasteboard];
     [pasteboard declareTypes:@[NSStringPboardType] owner:nil];
@@ -22,7 +22,7 @@ void glfwSetClipboardString(GLFWwindow * w, const char *string)
                   forType:NSStringPboardType];
 }
 
-const char* glfwGetClipboardString(GLFWwindow *w)
+const char* glfwGetClipboardString(GLFWwindow * /*w*/)
 {
     NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
 
@@ -47,7 +47,7 @@ const char* glfwGetClipboardString(GLFWwindow *w)
 int translateFlags(uint32_t flags)
 {
     int mods = 0;
-    
+
     if (flags & NSShiftKeyMask)
         mods |= GLFW_MOD_SHIFT;
     if (flags & NSControlKeyMask)
@@ -56,6 +56,6 @@ int translateFlags(uint32_t flags)
         mods |= GLFW_MOD_ALT;
     if (flags & NSCommandKeyMask)
         mods |= GLFW_MOD_SUPER;
-    
+
     return mods;
 }

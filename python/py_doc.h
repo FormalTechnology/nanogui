@@ -296,9 +296,17 @@ static const char *__doc_nanogui_Button_setIconPosition = R"doc()doc";
 
 static const char *__doc_nanogui_Button_setPushed = R"doc()doc";
 
+static const char *__doc_nanogui_Button_setTextAlignment = R"doc()doc";
+
 static const char *__doc_nanogui_Button_setTextColor = R"doc()doc";
 
+static const char *__doc_nanogui_Button_setTextTruncation = R"doc()doc";
+
+static const char *__doc_nanogui_Button_textAlignment = R"doc()doc";
+
 static const char *__doc_nanogui_Button_textColor = R"doc()doc";
+
+static const char *__doc_nanogui_Button_textTruncation = R"doc()doc";
 
 static const char *__doc_nanogui_CheckBox = R"doc(Two-state check box widget.)doc";
 
@@ -1398,6 +1406,14 @@ R"doc(Set the currently active font (2 are available by default: 'sans' and
 
 static const char *__doc_nanogui_Label_setTheme = R"doc(Set the Theme used to draw this widget)doc";
 
+static const char *__doc_nanogui_Label_setTextAlignment = R"doc()doc";
+
+static const char *__doc_nanogui_Label_setTextTruncation = R"doc()doc";
+
+static const char *__doc_nanogui_Label_textAlignment = R"doc()doc";
+
+static const char *__doc_nanogui_Label_textTruncation = R"doc()doc";
+
 static const char *__doc_nanogui_Layout = R"doc(Basic interface of a layout engine.)doc";
 
 static const char *__doc_nanogui_Layout_performLayout = R"doc()doc";
@@ -1498,8 +1514,8 @@ static const char *__doc_nanogui_Popup_Side_Left = R"doc()doc";
 
 static const char *__doc_nanogui_Popup_Side_Right = R"doc()doc";
 
-static const char *__doc_nanogui_Popup_anchorHeight =
-R"doc(Return the anchor height; this determines the vertical shift relative
+static const char *__doc_nanogui_Popup_anchorOffset =
+R"doc(Return the anchor offset; this determines the vertical/horizontal shift relative
 to the anchor position)doc";
 
 static const char *__doc_nanogui_Popup_anchorPos =
@@ -1510,7 +1526,7 @@ static const char *__doc_nanogui_Popup_draw = R"doc(Draw the popup window)doc";
 
 static const char *__doc_nanogui_Popup_load = R"doc()doc";
 
-static const char *__doc_nanogui_Popup_mAnchorHeight = R"doc()doc";
+static const char *__doc_nanogui_Popup_mAnchorOffset = R"doc()doc";
 
 static const char *__doc_nanogui_Popup_mAnchorPos = R"doc()doc";
 
@@ -1530,8 +1546,8 @@ static const char *__doc_nanogui_Popup_refreshRelativePlacement = R"doc(Internal
 
 static const char *__doc_nanogui_Popup_save = R"doc()doc";
 
-static const char *__doc_nanogui_Popup_setAnchorHeight =
-R"doc(Set the anchor height; this determines the vertical shift relative to
+static const char *__doc_nanogui_Popup_setAnchorOffset =
+R"doc(Set the anchor height; this determines the vertical/horizontal shift relative to
 the anchor position)doc";
 
 static const char *__doc_nanogui_Popup_setAnchorPos =
@@ -2020,15 +2036,15 @@ if there is no such tab.)doc";
 
 static const char *__doc_nanogui_TabWidget_tab_2 = R"doc()doc";
 
+static const char *__doc_nanogui_TextAlignment = R"doc(Text alignment options (Label, Button, TextBox).)doc";
+
+static const char *__doc_nanogui_TextAlignment_Center = R"doc()doc";
+
+static const char *__doc_nanogui_TextAlignment_Left = R"doc()doc";
+
+static const char *__doc_nanogui_TextAlignment_Right = R"doc()doc";
+
 static const char *__doc_nanogui_TextBox = R"doc(Fancy text box with builtin regular expression-based validation.)doc";
-
-static const char *__doc_nanogui_TextBox_Alignment = R"doc(How to align the text in the text box.)doc";
-
-static const char *__doc_nanogui_TextBox_Alignment_Center = R"doc()doc";
-
-static const char *__doc_nanogui_TextBox_Alignment_Left = R"doc()doc";
-
-static const char *__doc_nanogui_TextBox_Alignment_Right = R"doc()doc";
 
 static const char *__doc_nanogui_TextBox_SpinArea = R"doc(The location (if any) for the spin area.)doc";
 
@@ -2153,6 +2169,16 @@ static const char *__doc_nanogui_TextBox_unitsImage = R"doc()doc";
 static const char *__doc_nanogui_TextBox_updateCursor = R"doc()doc";
 
 static const char *__doc_nanogui_TextBox_value = R"doc()doc";
+
+static const char *__doc_nanogui_TextTruncation = R"doc(Text trunctation options (Label, Button etc).)doc";
+
+static const char *__doc_nanogui_TextTruncation_None = R"doc()doc";
+
+static const char *__doc_nanogui_TextTruncation_Head = R"doc()doc";
+
+static const char *__doc_nanogui_TextTruncation_Middle = R"doc()doc";
+
+static const char *__doc_nanogui_TextTruncation_Tail = R"doc()doc";
 
 static const char *__doc_nanogui_Theme = R"doc(Storage class for basic theme-related properties.)doc";
 

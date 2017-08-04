@@ -55,14 +55,14 @@ public:
     TextTruncation textTruncation() const { return mTextTruncation; }
     void setTextTruncation(TextTruncation truncation) { mTextTruncation = truncation; }
 
+    TextAlignment textAlignment() const { return mTextAlignment; }
+    void setTextAlignment(TextAlignment alignment) { mTextAlignment = alignment; }
+
     int icon() const { return mIcon; }
     void setIcon(int icon) { mIcon = icon; }
 
     int flags() const { return mFlags; }
     void setFlags(int buttonFlags) { mFlags = buttonFlags; }
-
-    bool centerText() const { return mCenterText; }
-    void setCenterText(bool center);
 
     IconPosition iconPosition() const { return mIconPosition; }
     void setIconPosition(IconPosition iconPosition) { mIconPosition = iconPosition; }
@@ -99,10 +99,10 @@ protected:
     Color mBackgroundColor;
     Color mTextColor;
     TextTruncation mTextTruncation;
+    TextAlignment mTextAlignment;
     std::function<void()> mCallback;
     std::function<void(bool)> mChangeCallback;
     std::vector<Button *> mButtonGroup;
-    bool mCenterText;
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };

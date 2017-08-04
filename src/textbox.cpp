@@ -18,6 +18,7 @@
 #include <nanogui/opengl.h>
 #include <nanogui/theme.h>
 #include <nanogui/entypo.h>
+#include <nanogui/common.h>
 #if defined(NANOGUI_ENABLE_SERIALIZATION)
 #include <nanogui/serializer/core.h>
 #endif
@@ -33,7 +34,7 @@ TextBox::TextBox(Widget *parent,const std::string &value)
       mCommitted(true),
       mValue(value),
       mDefaultValue(""),
-      mAlignment(Alignment::Center),
+      mAlignment(TextAlignment::Center),
       mUnits(""),
       mFormat(""),
       mUnitsImage(-1),
@@ -182,15 +183,15 @@ void TextBox::draw(NVGcontext* ctx) {
     }
 
     switch (mAlignment) {
-        case Alignment::Left:
+        case TextAlignment::Left:
             nvgTextAlign(ctx, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
             drawPos.x() += xSpacing + spinArrowsWidth;
             break;
-        case Alignment::Right:
+        case TextAlignment::Right:
             nvgTextAlign(ctx, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
             drawPos.x() += mSize.x() - unitWidth - xSpacing;
             break;
-        case Alignment::Center:
+        case TextAlignment::Center:
             nvgTextAlign(ctx, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
             drawPos.x() += mSize.x() * 0.5f;
             break;

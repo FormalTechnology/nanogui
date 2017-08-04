@@ -57,7 +57,7 @@ void Popup::refreshRelativePlacement() {
     mVisible &= mParentWindow->visibleRecursive();
 
     Vector2i arrowOffset = Vector2i(0, 0);
-    if ( mShowArrow ) {
+    if (mShowArrow) {
         switch(mSide) {
             case Side::Left:
                 arrowOffset.x() -= kArrowSize;
@@ -111,7 +111,7 @@ void Popup::draw(NVGcontext* ctx) {
     nvgFillColor(ctx, mTheme->mWindowPopup);
     nvgFill(ctx);
 
-    if(mShowArrow) {
+    if (mShowArrow) {
         nvgBeginPath(ctx);
 
         Vector2i base = mPos;
@@ -161,8 +161,15 @@ void Popup::save(Serializer &s) const {
 bool Popup::load(Serializer &s) {
     if (!Window::load(s)) return false;
     if (!s.get("anchorPos", mAnchorPos)) return false;
-    if (!s.get("anchorOffset", mAnchorOffset)) return false;
     if (!s.get("side", mSide)) return false;
+    // "new" fields
+    const std::vector<std::string> keys = s.keys();
+    if (std::find(keys.begin(), keys.end(), "anchorOffset") != keys.end()) {
+        if (!s.get("anchorOffset", mAnchorOffset)) return false;
+    } else if (std::find(keys.begin(), keys.end(), "anchorHeight") != keys.end()) {
+        // Read anchorHeight into anchorOffset (for backwards compatibility).
+        if (!s.get("anchorHeight", mAnchorOffset)) return false;
+    }
     return true;
 }
 #endif

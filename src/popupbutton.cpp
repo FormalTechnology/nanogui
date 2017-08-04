@@ -33,9 +33,25 @@ PopupButton::PopupButton(Widget *parent, const std::string &caption, int buttonI
 
 Vector2i PopupButton::preferredSize(NVGcontext *ctx) const {
     Vector2i size = Button::preferredSize(ctx);
-    if (mChevronIcon > 0) {
-        size.x() += 10;
+
+    if (mChevronIcon) {
+        float iw = 0.0f;
+        float fontSize = mFontSize == -1 ? mTheme->mButtonFontSize : mFontSize;
+        if (nvgIsFontIcon(mChevronIcon)) {
+            fontSize *= 1.5f;
+            nvgFontFace(ctx, "icons");
+            nvgFontSize(ctx, fontSize);
+            iw = nvgTextBounds(ctx, 0, 0, utf8(mChevronIcon).data(), nullptr, nullptr)
+                + mSize.y() * 0.15f;
+        } else {
+            int w, h;
+            fontSize *= 0.9f;
+            nvgImageSize(ctx, mChevronIcon, &w, &h);
+            iw = w * fontSize / h;
+        }
+        size.x() += iw + 20;
     }
+
     return size;
 }
 

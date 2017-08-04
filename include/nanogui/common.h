@@ -16,7 +16,6 @@
 #include <stdint.h>
 #include <array>
 #include <vector>
-#include <algorithm>
 
 /* Set to 1 to draw boxes around widgets */
 //#define NANOGUI_SHOW_WIDGET_BOUNDS 1
@@ -137,6 +136,12 @@ enum class TextTruncation {
     Head,
     Middle,
     Tail
+};
+
+enum class TextAlignment {
+    Left,
+    Center,
+    Right
 };
 
 /// Return a string truncated to fit in availableWidth. Uses font face and size currently set on ctx.

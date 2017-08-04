@@ -22,10 +22,7 @@ NAMESPACE_BEGIN(nanogui)
 static const int kScrollerWidth = 12;
 
 VScrollPanel::VScrollPanel(Widget *parent)
-    : Widget(parent), mChildPreferredHeight(0), mScroll(0.0f), mUpdateLayout(false),
-      mScrollerGradient(Color(220, 100), Color(128, 100)),
-      mTrackGradient(Color(0, 32), Color(0, 92))
-{ }
+    : Widget(parent), mChildPreferredHeight(0), mScroll(0.0f), mUpdateLayout(false) { }
 
 int VScrollPanel::scrollerHeight() const {
     return height() * std::min(1.0f, height() / (float)mChildPreferredHeight);
@@ -79,12 +76,10 @@ Vector2i VScrollPanel::preferredSize(NVGcontext *ctx) const {
     return size;
 }
 
-bool VScrollPanel::mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers)
-{
+bool VScrollPanel::mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers) {
     if (down
         && p.x() > (mPos.x() + mSize.x() - kScrollerWidth - 1)
-        && !mChildren.empty() && mChildPreferredHeight > mSize.y())
-    {
+        && !mChildren.empty() && mChildPreferredHeight > mSize.y()) {
         float scrollh = scrollerHeight();
         int scrollerPos = mScroll * (height() - scrollh);
         float delta = (height() + scrollh) / (float)mChildPreferredHeight;
@@ -146,7 +141,7 @@ void VScrollPanel::draw(NVGcontext *ctx) {
 
     NVGpaint paint = nvgBoxGradient(
         ctx, mPos.x() + mSize.x() - kScrollerWidth + 1, mPos.y() + 4 + 1, 8,
-        mSize.y() - 8, 3, 4, mTrackGradient.first, mTrackGradient.second);
+        mSize.y() - 8, 3, 4, mTheme->mTrackGradientTop, mTheme->mTrackGradientBot);
     nvgBeginPath(ctx);
     nvgRoundedRect(ctx, mPos.x() + mSize.x() - kScrollerWidth, mPos.y() + 4, 8,
                    mSize.y() - 8, 3);
@@ -158,7 +153,7 @@ void VScrollPanel::draw(NVGcontext *ctx) {
     paint = nvgBoxGradient(
         ctx, mPos.x() + mSize.x() - kScrollerWidth - 1,
         mPos.y() + 4 + (mSize.y() - 8 - scrollh) * mScroll - 1, 8, scrollh,
-        3, 4, mScrollerGradient.first, mScrollerGradient.second);
+        3, 4, mTheme->mScrollerGradientTop, mTheme->mScrollerGradientBot);
 
     nvgBeginPath(ctx);
     nvgRoundedRect(ctx, mPos.x() + mSize.x() - kScrollerWidth + 1,

@@ -162,9 +162,6 @@ public:
     /// Walk up the hierarchy and return the parent window
     Window *window() const;
 
-    /// Walk up the hierarchy and return the parent screen
-    Screen *screen() const;
-
     /// Associate this widget with an ID value (optional)
     void setId(const std::string &id) { mId = id; }
     /// Return the ID value associated with this widget, if any
@@ -204,7 +201,7 @@ public:
     }
 
     /// Determine the widget located at the given position value (recursive)
-    virtual Widget *findWidget(const Vector2i &p);
+    Widget *findWidget(const Vector2i &p);
 
     /// Handle a mouse button event (default implementation: propagate to children)
     virtual bool mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers);

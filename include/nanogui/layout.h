@@ -205,9 +205,9 @@ protected:
 
 protected:
     Orientation mOrientation;
-    int mResolution;
     Alignment mDefaultAlignment[2];
     std::vector<Alignment> mAlignment[2];
+    int mResolution;
     int mSpacing[2];
     int mStretch[2];
     int mMargin;
@@ -313,6 +313,7 @@ public:
     /// Specify the anchor data structure for a given widget
     void setAnchor(const Widget *widget, const Anchor &anchor) { mAnchor[widget] = anchor; }
 
+    /// Remove the anchor data structure for a given widget.
     void removeAnchor(const Widget *widget) { mAnchor.erase(widget); }
 
     /// Retrieve the anchor data structure for a given widget
