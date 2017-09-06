@@ -81,15 +81,19 @@ bool VScrollPanel::mouseButtonEvent(const Vector2i &p, int button, bool down, in
     if (down
         && p.x() > (mPos.x() + mSize.x() - kScrollerWidth - 1)
         && !mChildren.empty() && mChildPreferredHeight > mSize.y()) {
+
         float scrollh = scrollerHeight();
         int scrollerPos = mScroll * (height() - scrollh);
         float delta = (height() + scrollh) / (float)mChildPreferredHeight;
 
-        if (p.y() < scrollerPos) {
+        // position relative to this widget
+        int ypos = p.y() - mPos.y();
+
+        if (ypos < scrollerPos) {
             // page-up
             setNormalizedScroll(mScroll - delta);
             return true;
-        } else if (p.y() > (scrollerPos + scrollh)) {
+        } else if (ypos > (scrollerPos + scrollh)) {
             // page-down
             setNormalizedScroll(mScroll + delta);
             return true;
