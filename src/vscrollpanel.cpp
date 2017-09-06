@@ -20,12 +20,13 @@
 NAMESPACE_BEGIN(nanogui)
 
 static const int kScrollerWidth = 12;
+static const int kScrollerMinHeight = 24;
 
 VScrollPanel::VScrollPanel(Widget *parent)
     : Widget(parent), mChildPreferredHeight(0), mScroll(0.0f), mUpdateLayout(false) { }
 
 int VScrollPanel::scrollerHeight() const {
-    return height() * std::min(1.0f, height() / (float)mChildPreferredHeight);
+    return std::max((int)(height() * std::min(1.0f, height() / (float)mChildPreferredHeight)), kScrollerMinHeight);
 }
 
 void VScrollPanel::setNormalizedScroll(float scroll) {
