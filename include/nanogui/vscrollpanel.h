@@ -34,6 +34,9 @@ public:
     virtual bool scrollEvent(const Vector2i &p, const Vector2f &rel) override;
     virtual void draw(NVGcontext *ctx) override;
 
+    /// Return the current scroll position.
+    Vector2i scrollPosition() const;
+
 #if defined(NANOGUI_ENABLE_SERIALIZATION)
     virtual void save(Serializer &s) const override;
     virtual bool load(Serializer &s) override;

@@ -124,6 +124,10 @@ bool VScrollPanel::scrollEvent(const Vector2i &p, const Vector2f &rel) {
     }
 }
 
+Vector2i VScrollPanel::scrollPosition() const {
+    return Vector2i(0, mScroll*(mChildPreferredHeight - mSize.y()));
+}
+
 void VScrollPanel::draw(NVGcontext *ctx) {
     if (mChildren.empty())
         return;
