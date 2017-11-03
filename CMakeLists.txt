@@ -339,6 +339,7 @@ add_library(nanogui-obj OBJECT
   include/nanogui/serializer/opengl.h
   include/nanogui/serializer/sparse.h
   src/serializer.cpp
+  include/nanogui/animator.h src/animator.cpp
 )
 
 add_library(nanogui ${NANOGUI_LIBRARY_TYPE}
