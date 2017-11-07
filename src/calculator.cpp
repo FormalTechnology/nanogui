@@ -1,5 +1,5 @@
 /*
-    src/animator.cpp -- animator for widgets
+    src/calculator.cpp -- calculate value use curve and time
 
     NanoGUI was developed by Wenzel Jakob <wenzel.jakob@epfl.ch>.
     The widget drawing code is based on the NanoVG demo application
@@ -13,28 +13,49 @@
 
 NAMESPACE_BEGIN(nanogui)
 
-Calculator::Calculator(int startValue, int endValue, types::Duration_t duration, types::EasingCurveType type)
+Calculator::Calculator()
 {
-    mCurveType = type;
-    mCurrentValue = startValue;
+    init();
+}
+
+Calculator::Calculator(const CalculatorParams& params)
+{
+  setCalculatorParams(params);
+}
+
+void Calculator::setCalculatorParams(const CalculatorParams& params)
+{
+    mParams = params;
+    
+    init();
+}
+
+CalculatorParams& Calculator::getCalculatorParams()
+{
+  return mParams;
+}
+
+void Calculator::init()
+{
+    mCurrentValue = 0;
     mAccumulateTime = 0;
     mTimeStep = 10;
-
-    if (type == types::EasingCurveType::Linear)
-    {
-        mValueStep = (endValue - startValue) / duration.count();
-        mValueStep *= mTimeStep;
-    }
-    else
-    {
-        mValueStep = 0;
-    }
+    mValueStep = 0;
 }
 
 void Calculator::calculate()
 {
-    switch (mCurveType) {
+    static bool fistCall = true;
+
+    switch (mParams.curve) {
     case types::EasingCurveType::Linear:
+      
+        if (fistCall)
+        {
+            mValueStep = (mParams.endValue - mParams.startValue) / mParams.duration.count();
+            mValueStep *= mTimeStep;
+        }
+      
         mCurrentValue += mValueStep;
         mAccumulateTime += mTimeStep;
         break;

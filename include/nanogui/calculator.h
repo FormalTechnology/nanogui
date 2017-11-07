@@ -14,11 +14,24 @@
 
 NAMESPACE_BEGIN(nanogui)
 
+struct CalculatorParams
+{
+  int startValue;
+  int endValue;
+  types::Duration_t duration;
+  types::EasingCurveType curve;
+};
+
 class Calculator
 {
 public:
 
-    Calculator(int startValue, int endValue, types::Duration_t duration, types::EasingCurveType type);
+    Calculator();
+    Calculator(const CalculatorParams& params);
+    
+    void setCalculatorParams(const CalculatorParams& params);
+    CalculatorParams& getCalculatorParams();
+    
     void calculate();
 
 private:
@@ -27,7 +40,10 @@ private:
     int mValueStep;
     int mTimeStep;
     int mAccumulateTime;
-    types::EasingCurveType mCurveType;
+
+    CalculatorParams mParams;
+    
+    void init();
 };
 
 NAMESPACE_END(nanogui)
