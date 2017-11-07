@@ -12,11 +12,11 @@
  * \brief Defines the animator for widgets.
  */
 
-- Добавить группу анимации. Один аниатор для множества виджетов.
+/*- Добавить группу анимации. Один аниатор для множества виджетов.
 - Один глобальный обьект следит за временем и обновляет состояние аниматоров.
 - Аниматор должен регистрироваться в глобальном обьекте.
 - Разные типы аниматоров. Нужно два типа: аниматор по кривой и аниматор по ключевым кадрам.
-- Написать примеры использования анимации.
+- Написать примеры использования анимации.*/
 
 #pragma once
 
@@ -36,72 +36,101 @@ enum class EasingCurveType {
     Linear         ///< Linear curve type.
 };
 
-typedef std::chrono::duration<float, std::chrono::milliseconds> DurationType;
+typedef std::chrono::duration<unsigned int> DurationType;
 
-template <typename T>
-class NANOGUI_EXPORT Animator {
+class Animator
+{
 public:
 
-    Animator();
-    virtual ~Animator();
+    void setDuration(DurationType value);
+    DurationType getDuration();
 
-    void setStartValue(T value)
-    {
-        mStartValue = value;
-    }
+    void setCurveType(EasingCurveType type);
+    EasingCurveType getCurveType();
 
-    T getStartValue()
-    {
-        return mStartValue;
-    }
+protected:
 
-    void setEndValue(T value)
-    {
-        mEndValue = value;
-    }
+    DurationType mDuration;
+    EasingCurveType mCurveType;
 
-    T getEndValue()
-    {
-        return mEndValue;
-    }
+    virtual void animate() = 0;
+};
 
-    void setDuration(DurationType value)
-    {
-        mDuration = value;
-    }
+class NANOGUI_EXPORT AnimatorInt : public Animator {
+public:
 
-    DurationType getDuration()
-    {
-        return mDuration;
-    }
+    AnimatorInt();
+    virtual ~AnimatorInt();
 
-    void setCurveType(EasingCurveType type)
-    {
-        mCurveType = type;
-    }
+    void setStartValue(int value);
+    int getStartValue();
 
-    EasingCurveType getCurveType()
-    {
-        return mCurveType;
-    }
+    void setEndValue(int value);
+    int getEndValue();
 
 private:
 
     ///
-    using GetCallback = std::function<T()>;
-    GetCallback<T> mGetterFunc;
+    typedef std::function<int()> GetCallBack_t;
+    GetCallBack_t mGetterFunc;
 
     ///
-    using SetCallback = std::function<void(T)>;
-    SetCallback<T> mSetterFunc;
+    typedef std::function<void(int)> SetCallBack_t;
+    SetCallBack_t mSetterFunc;
 
-    T mStartValue;
-    T mEndValue;
-    DurationType mDuration;
-    EasingCurveType mCurveType;
+    int mStartValue;
+    int mEndValue;
 
+    void animate()
+    {
+        int currentValue = mGetterFunc();
+        auto d = (mEndValue - mStartValue) / mDuration.count();
+        currentValue += d * 10;
+        mSetterFunc(currentValue);
+    }
+};
+
+class Calculator
+{
 public:
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+    Calculator(int startValue, int endValue, DurationType duration, EasingCurveType type)
+    {
+        mCurveType = type;
+        mCurrentValue = startValue;
+        mAccumulateTime = 0;
+        mTimeStep = 10;
+
+        if (type == EasingCurveType::Linear)
+        {
+            mValueStep = (endValue - startValue) / duration.count();
+            mValueStep *= mTimeStep;
+        }
+        else
+        {
+            mValueStep = 0;
+        }
+    }
+
+    void calculate()
+    {
+        switch (mCurveType) {
+        case EasingCurveType::Linear:
+            mCurrentValue += mValueStep;
+            mAccumulateTime += mTimeStep;
+            break;
+        default:
+            break;
+        }
+    }
+
+private:
+
+    int mCurrentValue;
+    int mValueStep;
+    int mTimeStep;
+    int mAccumulateTime;
+    EasingCurveType mCurveType;
 };
 
 NAMESPACE_END(nanogui)
