@@ -43,22 +43,22 @@ int AnimatorInt::getEndValue()
     return mEndValue;
 }
 
-void Animator::setDuration(DurationType value)
+void Animator::setDuration(types::Duration_t value)
 {
     mDuration = value;
 }
 
-DurationType Animator::getDuration()
+types::Duration_t Animator::getDuration()
 {
     return mDuration;
 }
 
-void Animator::setCurveType(EasingCurveType type)
+void Animator::setCurveType(types::EasingCurveType type)
 {
     mCurveType = type;
 }
 
-EasingCurveType Animator::getCurveType()
+types::EasingCurveType Animator::getCurveType()
 {
     return mCurveType;
 }

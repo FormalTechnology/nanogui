@@ -20,9 +20,11 @@
 
 #pragma once
 
-#include <chrono>
+#include <memory>
 
 #include <nanogui/widget.h>
+#include <nanogui/calculator.h>
+#include <nanogui/types.h>
 
 NAMESPACE_BEGIN(nanogui)
 /**
@@ -31,27 +33,20 @@ NAMESPACE_BEGIN(nanogui)
  * \brief Animator for widgets.
  */
 
-/// Easing curve type.
-enum class EasingCurveType {
-    Linear         ///< Linear curve type.
-};
-
-typedef std::chrono::duration<unsigned int> DurationType;
-
 class Animator
 {
 public:
 
-    void setDuration(DurationType value);
-    DurationType getDuration();
+    void setDuration(types::Duration_t value);
+    types::Duration_t getDuration();
 
-    void setCurveType(EasingCurveType type);
-    EasingCurveType getCurveType();
+    void setCurveType(types::EasingCurveType type);
+    types::EasingCurveType getCurveType();
 
 protected:
 
-    DurationType mDuration;
-    EasingCurveType mCurveType;
+    types::Duration_t mDuration;
+    types::EasingCurveType mCurveType;
 
     virtual void animate() = 0;
 };
@@ -81,56 +76,9 @@ private:
     int mStartValue;
     int mEndValue;
 
-    void animate()
-    {
-        int currentValue = mGetterFunc();
-        auto d = (mEndValue - mStartValue) / mDuration.count();
-        currentValue += d * 10;
-        mSetterFunc(currentValue);
-    }
-};
+    std::shared_ptr<Calculator> mCalcPtr;
 
-class Calculator
-{
-public:
-
-    Calculator(int startValue, int endValue, DurationType duration, EasingCurveType type)
-    {
-        mCurveType = type;
-        mCurrentValue = startValue;
-        mAccumulateTime = 0;
-        mTimeStep = 10;
-
-        if (type == EasingCurveType::Linear)
-        {
-            mValueStep = (endValue - startValue) / duration.count();
-            mValueStep *= mTimeStep;
-        }
-        else
-        {
-            mValueStep = 0;
-        }
-    }
-
-    void calculate()
-    {
-        switch (mCurveType) {
-        case EasingCurveType::Linear:
-            mCurrentValue += mValueStep;
-            mAccumulateTime += mTimeStep;
-            break;
-        default:
-            break;
-        }
-    }
-
-private:
-
-    int mCurrentValue;
-    int mValueStep;
-    int mTimeStep;
-    int mAccumulateTime;
-    EasingCurveType mCurveType;
+    void animate();
 };
 
 NAMESPACE_END(nanogui)
