@@ -43,6 +43,11 @@ int AnimatorInt::getEndValue()
     return mEndValue;
 }
 
+void AnimatorInt::animate()
+{
+  
+}
+
 void Animator::setDuration(types::Duration_t value)
 {
     mDuration = value;
