@@ -33,25 +33,25 @@ NAMESPACE_BEGIN(nanogui)
  * \brief Animator for widgets.
  */
 
-class Animator
+class IAnimator
 {
 public:
 
-    void setDuration(types::Duration_t value);
-    types::Duration_t getDuration();
+    virtual void setDuration(types::Duration_t value) = 0;
+    virtual types::Duration_t getDuration() = 0;
 
-    void setCurveType(types::EasingCurveType type);
-    types::EasingCurveType getCurveType();
+    virtual void setCurveType(types::EasingCurveType type) = 0;
+    virtual types::EasingCurveType getCurveType() = 0;
+
+    virtual ~IAnimator() {}
 
 protected:
 
-    types::Duration_t mDuration;
-    types::EasingCurveType mCurveType;
-
     virtual void animate() = 0;
+    virtual void start() = 0;
 };
 
-class NANOGUI_EXPORT AnimatorInt : public Animator {
+class NANOGUI_EXPORT AnimatorInt : public IAnimator {
 public:
 
     AnimatorInt();
@@ -63,6 +63,12 @@ public:
     void setEndValue(int value);
     int getEndValue();
 
+    void setDuration(types::Duration_t value);
+    types::Duration_t getDuration();
+
+    void setCurveType(types::EasingCurveType type);
+    types::EasingCurveType getCurveType();
+
 private:
 
     ///
@@ -73,12 +79,11 @@ private:
     typedef std::function<void(int)> SetCallBack_t;
     SetCallBack_t mSetterFunc;
 
-    int mStartValue;
-    int mEndValue;
-
-    std::shared_ptr<Calculator> mCalcPtr;
+    CalculatorParams mParams;
+    Calculator mCalc;
 
     void animate();
+    void start();
 };
 
 NAMESPACE_END(nanogui)

@@ -32,11 +32,10 @@ public:
     void setCalculatorParams(const CalculatorParams& params);
     CalculatorParams& getCalculatorParams();
     
-    void calculate();
+    int calculate(const int currentValue);
 
 private:
 
-    int mCurrentValue;
     int mValueStep;
     int mTimeStep;
     int mAccumulateTime;

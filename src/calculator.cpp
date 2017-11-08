@@ -37,15 +37,15 @@ CalculatorParams& Calculator::getCalculatorParams()
 
 void Calculator::init()
 {
-    mCurrentValue = 0;
     mAccumulateTime = 0;
     mTimeStep = 10;
     mValueStep = 0;
 }
 
-void Calculator::calculate()
+int Calculator::calculate(const int currentValue)
 {
     static bool fistCall = true;
+    int value = 0;
 
     switch (mParams.curve) {
     case types::EasingCurveType::Linear:
@@ -54,14 +54,17 @@ void Calculator::calculate()
         {
             mValueStep = (mParams.endValue - mParams.startValue) / mParams.duration.count();
             mValueStep *= mTimeStep;
+            fistCall = false;
         }
-      
-        mCurrentValue += mValueStep;
+
+        value = currentValue + mValueStep;
         mAccumulateTime += mTimeStep;
         break;
     default:
         break;
     }
+
+    return  value;
 }
 
 NAMESPACE_END(nanogui)

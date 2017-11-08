@@ -23,49 +23,54 @@ AnimatorInt::~AnimatorInt()
 
 }
 
-void AnimatorInt::setStartValue(int value)
+void AnimatorInt::start()
 {
-    mStartValue = value;
+    mCalc.setCalculatorParams(mParams);
+}
+
+void AnimatorInt::setStartValue(int value)
+{   
+    mParams.startValue = value;
 }
 
 int AnimatorInt::getStartValue()
 {
-    return mStartValue;
+    return mParams.startValue;
 }
 
 void AnimatorInt::setEndValue(int value)
-{
-    mEndValue = value;
+{   
+    mParams.endValue = value;
 }
 
 int AnimatorInt::getEndValue()
-{
-    return mEndValue;
+{   
+    return mParams.endValue;
 }
 
 void AnimatorInt::animate()
 {
-  
+    mSetterFunc(mCalc.calculate(mGetterFunc()));
 }
 
-void Animator::setDuration(types::Duration_t value)
-{
-    mDuration = value;
+void AnimatorInt::setDuration(types::Duration_t value)
+{   
+    mParams.duration = value;
 }
 
-types::Duration_t Animator::getDuration()
+types::Duration_t AnimatorInt::getDuration()
 {
-    return mDuration;
+    return mParams.duration;
 }
 
-void Animator::setCurveType(types::EasingCurveType type)
-{
-    mCurveType = type;
+void AnimatorInt::setCurveType(types::EasingCurveType type)
+{   
+    mParams.curve = type;
 }
 
-types::EasingCurveType Animator::getCurveType()
-{
-    return mCurveType;
+types::EasingCurveType AnimatorInt::getCurveType()
+{   
+    return  mParams.curve;
 }
 
 NAMESPACE_END(nanogui)
