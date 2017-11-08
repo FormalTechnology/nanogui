@@ -21,6 +21,7 @@
 #pragma once
 
 #include <memory>
+#include <functional>
 
 #include <nanogui/widget.h>
 #include <nanogui/calculator.h>
@@ -63,6 +64,8 @@ public:
 
     void setDuration(types::Duration_t value);
     types::Duration_t getDuration();
+    
+    void setDuration(unsigned int value);
 
     void setCurveType(types::EasingCurveType type);
     types::EasingCurveType getCurveType();
@@ -70,15 +73,10 @@ public:
     void animate();
     void start();
 
+    std::function<int()> mGetterFunc;
+    std::function<void(int)> mSetterFunc;
+
 private:
-
-    ///
-    typedef std::function<int()> GetCallBack_t;
-    GetCallBack_t mGetterFunc;
-
-    ///
-    typedef std::function<void(int)> SetCallBack_t;
-    SetCallBack_t mSetterFunc;
 
     CalculatorParams mParams;
     Calculator mCalc;

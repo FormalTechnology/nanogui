@@ -16,7 +16,6 @@ NAMESPACE_BEGIN(nanogui)
 
 AnimatorInt::AnimatorInt()
 {
-    AnimationManager::Instance().addAnimator(*this);
 }
 
 AnimatorInt::~AnimatorInt()
@@ -62,6 +61,12 @@ void AnimatorInt::setDuration(types::Duration_t value)
 types::Duration_t AnimatorInt::getDuration()
 {
     return mParams.duration;
+}
+
+void AnimatorInt::setDuration(unsigned int value)
+{
+  std::chrono::milliseconds m(value);
+  mParams.duration = std::chrono::duration_cast<types::Duration_t>(m);
 }
 
 void AnimatorInt::setCurveType(types::EasingCurveType type)

@@ -13,6 +13,8 @@
 #include <thread>
 #include <chrono>
 
+#include <iostream>
+
 #include <nanogui/widget.h>
 #include <nanogui/animator.h>
 
@@ -35,15 +37,21 @@ public:
 
     void start(const Interval& interval, const Timeout& timeout)
     {
+      std::cout << "Timer::start::1" << std::endl;
+      
         running = true;
 
         th = std::thread([=]()
         {
+          std::cout << "Timer::start::2" << std::endl;
             while (running == true)
             {
+              std::cout << "Timer::start::3" << std::endl;
                 std::this_thread::sleep_for(interval);
                 timeout();
+              std::cout << "Timer::start::4" << std::endl;
             }
+          std::cout << "Timer::start::5" << std::endl;
         });
     }
 
@@ -55,7 +63,7 @@ public:
 };
 
 
-class AnimationManager
+class NANOGUI_EXPORT AnimationManager
 {
 public:
     static AnimationManager& Instance()
@@ -81,7 +89,8 @@ public:
             item.start();
         }
 
-        Instance().mTimer.start(std::chrono::milliseconds(10), std::bind(&AnimationManager::updateAnimators, &Instance()));
+        Instance().mTimer.start(std::chrono::milliseconds(10), std::bind(&AnimationManager::updateAnimators,
+          Instance().get()));
     }
 
     static void stopAnimation()
@@ -94,13 +103,22 @@ private:
     std::vector<AnimatorInt> mAnimatorList;
 
     Timer mTimer;
+    
+    AnimationManager* get()
+    {
+      return this;
+    }
 
     void updateAnimators()
     {
+      std::cout << "AnimationManager::updateAnimators::1" << std::endl;
         for (auto& item : Instance().mAnimatorList)
         {
+          std::cout << "AnimationManager::updateAnimators::1_1" << std::endl;
             item.animate();
+          std::cout << "AnimationManager::updateAnimators::1_2" << std::endl;
         }
+      std::cout << "AnimationManager::updateAnimators::2" << std::endl;
     }
 
     AnimationManager(){}

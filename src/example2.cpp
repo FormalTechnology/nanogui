@@ -13,6 +13,7 @@
 
 #include <nanogui/nanogui.h>
 #include <iostream>
+#include <thread>
 
 using namespace nanogui;
 
@@ -30,8 +31,47 @@ std::string strval = "A string";
 test_enum enumval = Item2;
 Color colval(0.5f, 0.5f, 0.7f, 1.f);
 
+enum class Axis
+{
+  eX,
+  eY
+};
+
+int getter(Window* window, Axis axis)
+{
+  Eigen::Vector2i pos = window->position();
+  if (axis == Axis::eX)
+  {
+    return pos.x();
+  }
+  else if (axis == Axis::eY)
+  {
+    return pos.y();
+  }
+  
+  return -1;
+}
+
+void setter(int value, Window* window, Axis axis)
+{
+  std::cout << "Global::setter:: value == " << value << std::endl;
+  Eigen::Vector2i pos = window->position();
+  if (axis == Axis::eX)
+  {
+    Eigen::Vector2i newPos(value, pos.y());
+    window->setPosition(newPos);
+  }
+  else if (axis == Axis::eY)
+  {
+    Eigen::Vector2i newPos(pos.x(), value);
+    window->setPosition(newPos);
+  }
+}
+
 int main(int /* argc */, char ** /* argv */) {
     nanogui::init();
+
+    AnimationManager::Instance();
 
     /* scoped variables */ {
         bool use_gl_4_1 = false;// Set to true to create an OpenGL 4.1 context.
@@ -73,14 +113,29 @@ int main(int /* argc */, char ** /* argv */) {
              });
 
         gui->addGroup("Other widgets");
-        gui->addButton("A button", []() { std::cout << "Button pressed." << std::endl; });
+        gui->addButton("A button", []()
+        {
+          AnimationManager::startAnimation();
+          std::cout << "Button pressed." << std::endl;
+        });
 
         screen->setVisible(true);
         screen->performLayout();
-        window->center();
+        //window->center();
+        
+        AnimatorInt animator;
+        animator.setStartValue(10);
+        animator.setEndValue(500);
+        animator.setDuration(20000);
+        animator.mGetterFunc = std::bind(&getter, window.get(), Axis::eX);
+        animator.mSetterFunc = std::bind(&setter, std::placeholders::_1, window.get(), Axis::eX);
+        
+        AnimationManager::Instance().addAnimator(animator);
 
         nanogui::mainloop();
     }
+    
+    AnimationManager::stopAnimation();
 
     nanogui::shutdown();
     return 0;
