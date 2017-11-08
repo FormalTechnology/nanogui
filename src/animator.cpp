@@ -10,12 +10,13 @@
 */
 
 #include <nanogui/animator.h>
+#include <nanogui/animationmanager.h>
 
 NAMESPACE_BEGIN(nanogui)
 
 AnimatorInt::AnimatorInt()
 {
-
+    AnimationManager::Instance().addAnimator(*this);
 }
 
 AnimatorInt::~AnimatorInt()

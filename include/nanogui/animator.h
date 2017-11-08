@@ -45,8 +45,6 @@ public:
 
     virtual ~IAnimator() {}
 
-protected:
-
     virtual void animate() = 0;
     virtual void start() = 0;
 };
@@ -69,6 +67,9 @@ public:
     void setCurveType(types::EasingCurveType type);
     types::EasingCurveType getCurveType();
 
+    void animate();
+    void start();
+
 private:
 
     ///
@@ -81,9 +82,6 @@ private:
 
     CalculatorParams mParams;
     Calculator mCalc;
-
-    void animate();
-    void start();
 };
 
 NAMESPACE_END(nanogui)
