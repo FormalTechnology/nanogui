@@ -9,6 +9,8 @@
     BSD-style license that can be found in the LICENSE.txt file.
 */
 
+#include <iostream>
+
 #include <nanogui/calculator.h>
 
 NAMESPACE_BEGIN(nanogui)
@@ -44,21 +46,20 @@ void Calculator::init()
 
 int Calculator::calculate(const int currentValue)
 {
-    static bool fistCall = true;
     int value = 0;
+
+    if (mAccumulateTime >= mParams.duration.count())
+    {
+        return  currentValue;
+    }
 
     switch (mParams.curve) {
     case types::EasingCurveType::Linear:
-      
-        if (fistCall)
-        {
-            mValueStep = (mParams.endValue - mParams.startValue) / mParams.duration.count();
-            mValueStep *= mTimeStep;
-            fistCall = false;
-        }
 
-        value = currentValue + mValueStep;
         mAccumulateTime += mTimeStep;
+
+        value = mParams.startValue + ((mParams.endValue - mParams.startValue) * (mAccumulateTime / (double)mParams.duration.count()));
+
         break;
     default:
         break;
