@@ -9,8 +9,6 @@
     BSD-style license that can be found in the LICENSE.txt file.
 */
 
-#include <iostream>
-
 #include <nanogui/calculator.h>
 
 NAMESPACE_BEGIN(nanogui)

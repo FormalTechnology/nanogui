@@ -54,7 +54,6 @@ int getter(Window* window, Axis axis)
 
 void setter(int value, Window* window, Axis axis)
 {
-  std::cout << "Global::setter:: value == " << value << std::endl;
   Eigen::Vector2i pos = window->position();
   if (axis == Axis::eX)
   {
@@ -74,7 +73,7 @@ int main(int /* argc */, char ** /* argv */) {
     AnimationManager::Instance();
 
     /* scoped variables */ {
-        bool use_gl_4_1 = false;// Set to true to create an OpenGL 4.1 context.
+        bool use_gl_4_1 = true;// Set to true to create an OpenGL 4.1 context.
         Screen *screen = nullptr;
 
         if (use_gl_4_1) {
@@ -121,12 +120,11 @@ int main(int /* argc */, char ** /* argv */) {
 
         screen->setVisible(true);
         screen->performLayout();
-        //window->center();
         
         AnimatorInt animator;
-        animator.setStartValue(10);
-        animator.setEndValue(500);
-        animator.setDuration(20000);
+        animator.setStartValue(0);
+        animator.setEndValue(1000);
+        animator.setDuration(500);
         animator.mGetterFunc = std::bind(&getter, window.get(), Axis::eX);
         animator.mSetterFunc = std::bind(&setter, std::placeholders::_1, window.get(), Axis::eX);
         
