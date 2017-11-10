@@ -343,6 +343,7 @@ add_library(nanogui-obj OBJECT
   include/nanogui/calculator.h src/calculator.cpp
   include/nanogui/types.h
   include/nanogui/animationmanager.h src/animationmanager.cpp
+  include/nanogui/timer.h src/timer.cpp
 )
 
 add_library(nanogui ${NANOGUI_LIBRARY_TYPE}
