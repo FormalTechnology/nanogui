@@ -13,36 +13,40 @@
 
 NAMESPACE_BEGIN(nanogui)
 
-Calculator::Calculator()
+template <typename T>
+Calculator<T>::Calculator()
 {
     init();
 }
 
-Calculator::Calculator(const CalculatorParams& params)
+template <typename T>
+Calculator<T>::Calculator(const CalculatorParams<T>& params)
 {
   setCalculatorParams(params);
 }
 
-void Calculator::setCalculatorParams(const CalculatorParams& params)
+template <typename T>
+void Calculator<T>::setCalculatorParams(const CalculatorParams<T>& params)
 {
     mParams = params;
     
     init();
 }
 
-CalculatorParams& Calculator::getCalculatorParams()
+template <typename T>
+CalculatorParams<T>& Calculator<T>::getCalculatorParams()
 {
   return mParams;
 }
 
-void Calculator::init()
+template <typename T>
+void Calculator<T>::init()
 {
     mAccumulateTime = 0;
-    mTimeStep = 10;
-    mValueStep = 0;
 }
 
-int Calculator::calculate(const int currentValue)
+template  <typename T>
+int Calculator<T>::calculate(const int currentValue)
 {
     int value = 0;
 
@@ -54,12 +58,10 @@ int Calculator::calculate(const int currentValue)
     switch (mParams.curve) {
     case types::EasingCurveType::Linear:
 
-        mAccumulateTime += mTimeStep;
+        mAccumulateTime += 10;
 
         value = mParams.startValue + ((mParams.endValue - mParams.startValue) * (mAccumulateTime / (double)mParams.duration.count()));
 
-        break;
-    default:
         break;
     }
 

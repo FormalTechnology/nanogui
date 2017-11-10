@@ -14,67 +14,80 @@
 
 NAMESPACE_BEGIN(nanogui)
 
-AnimatorInt::AnimatorInt()
+template <typename T>
+Animator<T>::Animator()
 {
 }
 
-AnimatorInt::~AnimatorInt()
+template <typename T>
+Animator<T>::~Animator()
 {
 
 }
 
-void AnimatorInt::start()
+template <typename T>
+void Animator<T>::start()
 {
     mCalc.setCalculatorParams(mParams);
 }
 
-void AnimatorInt::setStartValue(int value)
+template <typename T>
+void Animator<T>::setStartValue(T value)
 {   
     mParams.startValue = value;
 }
 
-int AnimatorInt::getStartValue()
+template <typename T>
+T Animator<T>::getStartValue()
 {
     return mParams.startValue;
 }
 
-void AnimatorInt::setEndValue(int value)
+template <typename T>
+void Animator<T>::setEndValue(T value)
 {   
     mParams.endValue = value;
 }
 
-int AnimatorInt::getEndValue()
+template <typename T>
+T Animator<T>::getEndValue()
 {   
     return mParams.endValue;
 }
 
-void AnimatorInt::animate()
+template <typename T>
+void Animator<T>::animate()
 {
     mSetterFunc(mCalc.calculate(mGetterFunc()));
 }
 
-void AnimatorInt::setDuration(types::Duration_t value)
+template <typename T>
+void Animator<T>::setDuration(types::Duration_t value)
 {   
     mParams.duration = value;
 }
 
-types::Duration_t AnimatorInt::getDuration()
+template <typename T>
+types::Duration_t Animator<T>::getDuration()
 {
     return mParams.duration;
 }
 
-void AnimatorInt::setDuration(unsigned int value)
+template <typename T>
+void Animator<T>::setDuration(unsigned int value)
 {
   std::chrono::milliseconds m(value);
   mParams.duration = std::chrono::duration_cast<types::Duration_t>(m);
 }
 
-void AnimatorInt::setCurveType(types::EasingCurveType type)
+template <typename T>
+void Animator<T>::setCurveType(types::EasingCurveType type)
 {   
     mParams.curve = type;
 }
 
-types::EasingCurveType AnimatorInt::getCurveType()
+template <typename T>
+types::EasingCurveType Animator<T>::getCurveType()
 {   
     return  mParams.curve;
 }

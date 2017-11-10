@@ -121,19 +121,18 @@ int main(int /* argc */, char ** /* argv */) {
         screen->setVisible(true);
         screen->performLayout();
         
-        AnimatorInt animator;
+        Animator<int> animator;
         animator.setStartValue(0);
         animator.setEndValue(1000);
         animator.setDuration(500);
         animator.mGetterFunc = std::bind(&getter, window.get(), Axis::eX);
         animator.mSetterFunc = std::bind(&setter, std::placeholders::_1, window.get(), Axis::eX);
         
-        AnimationManager::Instance().addAnimator(animator);
+        AnimationManager::Instance().addAnimator(std::shared_ptr<IAnimatorBase>(&animator));
 
         nanogui::mainloop();
+        AnimationManager::stopAnimation();
     }
-    
-    AnimationManager::stopAnimation();
 
     nanogui::shutdown();
     return 0;

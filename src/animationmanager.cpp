@@ -19,7 +19,7 @@ AnimationManager& AnimationManager::Instance()
     return manager;
 }
 
-void AnimationManager::addAnimator(const AnimatorInt& animator)
+void AnimationManager::addAnimator(const std::shared_ptr<IAnimatorBase> animator)
 {
     Instance().mAnimatorList.push_back(animator);
 }
@@ -33,7 +33,7 @@ void AnimationManager::startAnimation()
 {
     for (auto& item : Instance().mAnimatorList)
     {
-        item.start();
+        item->start();
     }
 
     auto& instance = Instance();
@@ -43,13 +43,14 @@ void AnimationManager::startAnimation()
 void AnimationManager::stopAnimation()
 {
     Instance().mTimer.stop();
+    Instance().mAnimatorList.clear();
 }
 
 void AnimationManager::updateAnimators()
 {
     for (auto& item : Instance().mAnimatorList)
     {
-        item.animate();
+        item->animate();
     }
 }
 

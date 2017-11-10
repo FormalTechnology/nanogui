@@ -14,35 +14,37 @@
 
 NAMESPACE_BEGIN(nanogui)
 
+template <typename T>
 struct CalculatorParams
 {
-  int startValue;
-  int endValue;
+  T startValue;
+  T endValue;
   types::Duration_t duration;
   types::EasingCurveType curve;
 };
 
+template <typename T>
 class Calculator
 {
 public:
 
     Calculator();
-    Calculator(const CalculatorParams& params);
+    Calculator(const CalculatorParams<T>& params);
     
-    void setCalculatorParams(const CalculatorParams& params);
-    CalculatorParams& getCalculatorParams();
+    void setCalculatorParams(const CalculatorParams<T>& params);
+    CalculatorParams<T>& getCalculatorParams();
     
     int calculate(const int currentValue);
 
 private:
 
-    int mValueStep;
-    int mTimeStep;
     int mAccumulateTime;
 
-    CalculatorParams mParams;
+    CalculatorParams<T> mParams;
     
     void init();
 };
 
 NAMESPACE_END(nanogui)
+
+#include "../../src/calculator.tpp"

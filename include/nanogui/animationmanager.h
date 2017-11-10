@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include <nanogui/widget.h>
@@ -24,7 +25,7 @@ public:
 
     static AnimationManager& Instance();
 
-    static void addAnimator(const AnimatorInt& animator);
+    static void addAnimator(const std::shared_ptr<IAnimatorBase> animator);
     static void deleteAnimator();
 
     static void startAnimation();
@@ -32,7 +33,7 @@ public:
 
 private:
 
-    std::vector<AnimatorInt> mAnimatorList;
+    std::vector<std::shared_ptr<IAnimatorBase>> mAnimatorList;
 
     Timer mTimer;
 

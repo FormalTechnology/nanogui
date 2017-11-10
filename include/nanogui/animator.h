@@ -34,7 +34,7 @@ NAMESPACE_BEGIN(nanogui)
  * \brief Animator for widgets.
  */
 
-class IAnimator
+class IAnimatorBase
 {
 public:
 
@@ -44,23 +44,24 @@ public:
     virtual void setCurveType(types::EasingCurveType type) = 0;
     virtual types::EasingCurveType getCurveType() = 0;
 
-    virtual ~IAnimator() {}
+    virtual ~IAnimatorBase() {}
 
     virtual void animate() = 0;
     virtual void start() = 0;
 };
 
-class NANOGUI_EXPORT AnimatorInt : public IAnimator {
+template <typename T>
+class NANOGUI_EXPORT Animator : public IAnimatorBase {
 public:
 
-    AnimatorInt();
-    virtual ~AnimatorInt();
+    Animator();
+    virtual ~Animator();
 
-    void setStartValue(int value);
-    int getStartValue();
+    void setStartValue(T value);
+    T getStartValue();
 
-    void setEndValue(int value);
-    int getEndValue();
+    void setEndValue(T value);
+    T getEndValue();
 
     void setDuration(types::Duration_t value);
     types::Duration_t getDuration();
@@ -73,13 +74,15 @@ public:
     void animate();
     void start();
 
-    std::function<int()> mGetterFunc;
-    std::function<void(int)> mSetterFunc;
+    std::function<T()> mGetterFunc;
+    std::function<void(T)> mSetterFunc;
 
 private:
 
-    CalculatorParams mParams;
-    Calculator mCalc;
+    CalculatorParams<T> mParams;
+    Calculator<T> mCalc;
 };
 
 NAMESPACE_END(nanogui)
+
+#include "../../src/animator.tpp"
