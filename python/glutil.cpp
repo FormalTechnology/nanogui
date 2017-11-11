@@ -40,7 +40,7 @@ static void uploadAttribPy(GLShader &sh, const std::string &name, py::array M, i
     }
 
     sh.uploadAttrib(name, M.shape(0) * M.shape(1), (int) M.shape(0),
-                    M.itemsize(), glType, integral, M.data(), version);
+                    (uint32_t)M.itemsize(), glType, integral, M.data(), version);
 }
 
 static void setUniformPy(GLShader &sh, const std::string &name, py::object arg, bool warn = true) {
@@ -140,7 +140,7 @@ void register_glutil(py::module &m) {
     py::class_<Arcball>(m, "Arcball", D(Arcball))
         .def(py::init<float>(), py::arg("speedFactor") = 2.f, D(Arcball, Arcball))
         .def(py::init<const Quaternionf &>(), D(Arcball, Arcball, 2))
-        .def("state", &Arcball::state, D(Arcball, state))
+        .def("state", (Quaternionf& (Arcball::*)()) &Arcball::state, D(Arcball, state))
         .def("setState", &Arcball::setState, D(Arcball, setState))
         .def("size", &Arcball::size, D(Arcball, size))
         .def("setSize", &Arcball::setSize, D(Arcball, setSize))
