@@ -17,6 +17,11 @@ NAMESPACE_BEGIN(nanogui)
 template <typename T>
 Animator<T>::Animator()
 {
+  mParams.startValue = 0;
+  mParams.endValue = 0;
+  mParams.curve = types::EasingCurveType::Linear;
+  
+  setDuration(0);
 }
 
 template <typename T>

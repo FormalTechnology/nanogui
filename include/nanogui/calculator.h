@@ -34,7 +34,7 @@ public:
     void setCalculatorParams(const CalculatorParams<T>& params);
     CalculatorParams<T>& getCalculatorParams();
     
-    int calculate(const int currentValue);
+    T calculate(const T currentValue);
 
 private:
 

@@ -46,9 +46,9 @@ void Calculator<T>::init()
 }
 
 template  <typename T>
-int Calculator<T>::calculate(const int currentValue)
+T Calculator<T>::calculate(const T currentValue)
 {
-    int value = 0;
+    T value = 0;
 
     if (mAccumulateTime >= mParams.duration.count())
     {
