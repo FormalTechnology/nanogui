@@ -71,6 +71,7 @@ int main(int /* argc */, char ** /* argv */) {
     nanogui::init();
 
     AnimationManager::Instance();
+    AnimationManager::setTimeOut(10);
 
     /* scoped variables */ {
         bool use_gl_4_1 = true;// Set to true to create an OpenGL 4.1 context.

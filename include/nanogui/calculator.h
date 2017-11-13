@@ -14,6 +14,8 @@
 
 NAMESPACE_BEGIN(nanogui)
 
+class IAnimatorBase;
+
 template <typename T>
 struct CalculatorParams
 {
@@ -36,9 +38,13 @@ public:
     
     T calculate(const T currentValue);
 
+    unsigned int getTimeOut();
+    void setTimeOut(unsigned int timeOut);
+
 private:
 
-    int mAccumulateTime;
+    unsigned int mAccumulateTime;
+    unsigned int mTimeOut;
 
     CalculatorParams<T> mParams;
     

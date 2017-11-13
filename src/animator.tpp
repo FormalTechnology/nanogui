@@ -34,6 +34,7 @@ template <typename T>
 void Animator<T>::start()
 {
     mCalc.setCalculatorParams(mParams);
+    mCalc.setTimeOut(AnimationManager::getTimeOut());
 }
 
 template <typename T>

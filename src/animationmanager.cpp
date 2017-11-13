@@ -9,6 +9,7 @@
     BSD-style license that can be found in the LICENSE.txt file.
 */
 
+#include <nanogui/animator.h>
 #include <nanogui/animationmanager.h>
 
 NAMESPACE_BEGIN(nanogui)
@@ -37,7 +38,7 @@ void AnimationManager::startAnimation()
     }
 
     auto& instance = Instance();
-    instance.mTimer.start(std::chrono::milliseconds(10), [&instance]{ instance.updateAnimators(); });
+    instance.mTimer.start(std::chrono::milliseconds(Instance().mTimeOut), [&instance]{ instance.updateAnimators(); });
 }
 
 void AnimationManager::stopAnimation()
@@ -52,6 +53,16 @@ void AnimationManager::updateAnimators()
     {
         item->animate();
     }
+}
+
+unsigned int AnimationManager::getTimeOut()
+{
+    return Instance().mTimeOut;
+}
+
+void AnimationManager::setTimeOut(unsigned int timeOut)
+{
+    Instance().mTimeOut = timeOut;
 }
 
 NAMESPACE_END(nanogui)

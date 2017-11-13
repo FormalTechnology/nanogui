@@ -13,10 +13,11 @@
 #include <vector>
 
 #include <nanogui/widget.h>
-#include <nanogui/animator.h>
 #include <nanogui/timer.h>
 
 NAMESPACE_BEGIN(nanogui)
+
+class IAnimatorBase;
 
 class NANOGUI_EXPORT AnimationManager
 {
@@ -31,15 +32,23 @@ public:
     static void startAnimation();
     static void stopAnimation();
 
+    static unsigned int getTimeOut();
+    static void setTimeOut(unsigned int timeOut);
+
 private:
 
     std::vector<std::shared_ptr<IAnimatorBase>> mAnimatorList;
 
     Timer mTimer;
+    unsigned int mTimeOut;
 
     void updateAnimators();
 
-    AnimationManager(){}
+    AnimationManager()
+    {
+        mTimeOut = 0;
+    }
+
     AnimationManager(const AnimationManager& root);
     AnimationManager& operator = (const AnimationManager&);
 };

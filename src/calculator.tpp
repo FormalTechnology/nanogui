@@ -10,6 +10,8 @@
 */
 
 #include <nanogui/calculator.h>
+#include <nanogui/animator.h>
+#include <nanogui/animationmanager.h>
 
 NAMESPACE_BEGIN(nanogui)
 
@@ -43,6 +45,7 @@ template <typename T>
 void Calculator<T>::init()
 {
     mAccumulateTime = 0;
+    mTimeOut = 0;
 }
 
 template  <typename T>
@@ -58,7 +61,7 @@ T Calculator<T>::calculate(const T currentValue)
     switch (mParams.curve) {
     case types::EasingCurveType::Linear:
 
-        mAccumulateTime += 10;
+        mAccumulateTime += mTimeOut;
 
         value = mParams.startValue + ((mParams.endValue - mParams.startValue) * (mAccumulateTime / (double)mParams.duration.count()));
 
@@ -66,6 +69,18 @@ T Calculator<T>::calculate(const T currentValue)
     }
 
     return  value;
+}
+
+template <typename T>
+unsigned int Calculator<T>::getTimeOut()
+{
+    return mTimeOut;
+}
+
+template <typename T>
+void Calculator<T>::setTimeOut(unsigned int timeOut)
+{
+    mTimeOut = timeOut;
 }
 
 NAMESPACE_END(nanogui)
