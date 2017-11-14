@@ -73,6 +73,7 @@ public:
 
     void animate();
     void start();
+    bool isFinished();
 
     std::function<T()> mGetterFunc;
     std::function<void(T)> mSetterFunc;
@@ -81,6 +82,7 @@ private:
 
     CalculatorParams<T> mParams;
     Calculator<T> mCalc;
+    bool mAnimationFinished;
 };
 
 NAMESPACE_END(nanogui)

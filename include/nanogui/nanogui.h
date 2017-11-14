@@ -41,3 +41,4 @@
 #include <nanogui/glcanvas.h>
 #include <nanogui/animator.h>
 #include <nanogui/animationmanager.h>
+#include <nanogui/animatorStep.h>

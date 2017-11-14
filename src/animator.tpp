@@ -20,6 +20,8 @@ Animator<T>::Animator()
   mParams.startValue = 0;
   mParams.endValue = 0;
   mParams.curve = types::EasingCurveType::Linear;
+
+  mAnimationFinished = false;
   
   setDuration(0);
 }
@@ -33,6 +35,7 @@ Animator<T>::~Animator()
 template <typename T>
 void Animator<T>::start()
 {
+    mAnimationFinished = false;
     mCalc.setCalculatorParams(mParams);
     mCalc.setTimeOut(AnimationManager::getTimeOut());
 }
@@ -64,7 +67,24 @@ T Animator<T>::getEndValue()
 template <typename T>
 void Animator<T>::animate()
 {
-    mSetterFunc(mCalc.calculate(mGetterFunc()));
+    if (!mSetterFunc || !mGetterFunc)
+    {
+        return;
+    }
+
+    auto temp = mCalc.calculate(mGetterFunc());
+    if (temp == mParams.endValue)
+    {
+        mAnimationFinished = true;
+    }
+
+    mSetterFunc(temp);
+}
+
+template <typename T>
+bool Animator<T>::isFinished()
+{
+    return mAnimationFinished;
 }
 
 template <typename T>

@@ -344,6 +344,7 @@ add_library(nanogui-obj OBJECT
   include/nanogui/types.h
   include/nanogui/animationmanager.h src/animationmanager.cpp
   include/nanogui/timer.h src/timer.cpp
+  include/nanogui/animatorStep.h src/animatorStep.tpp
 )
 
 add_library(nanogui ${NANOGUI_LIBRARY_TYPE}

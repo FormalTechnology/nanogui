@@ -11,9 +11,10 @@
     BSD-style license that can be found in the LICENSE.txt file.
 */
 
-#include <nanogui/nanogui.h>
 #include <iostream>
 #include <thread>
+#include <chrono>
+#include <nanogui/nanogui.h>
 
 using namespace nanogui;
 
@@ -122,11 +123,31 @@ int main(int /* argc */, char ** /* argv */) {
         screen->setVisible(true);
         screen->performLayout();
 
-        auto animator = std::make_shared<Animator<int>>();
+        /*auto animator = std::make_shared<Animator<int>>();
 
         animator->setStartValue(0);
         animator->setEndValue(1000);
         animator->setDuration(500);
+        animator->mGetterFunc = std::bind(&getter, window.get(), Axis::eX);
+        animator->mSetterFunc = std::bind(&setter, std::placeholders::_1, window.get(), Axis::eX);*/
+
+        auto animator = std::make_shared<AnimatorStep<int>>();
+
+        CalculatorParams<int> step1;
+        CalculatorParams<int> step2;
+
+        step1.startValue = 0;
+        step1.endValue = 500;
+
+        std::chrono::milliseconds m(1000);
+        step1.duration = m;
+
+        step2.startValue = 500;
+        step2.endValue = 0;
+        step2.duration = m;
+
+        animator->addStep(step1);
+        animator->addStep(step2);
         animator->mGetterFunc = std::bind(&getter, window.get(), Axis::eX);
         animator->mSetterFunc = std::bind(&setter, std::placeholders::_1, window.get(), Axis::eX);
 
