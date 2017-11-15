@@ -42,3 +42,4 @@
 #include <nanogui/animator.h>
 #include <nanogui/animationmanager.h>
 #include <nanogui/animatorStep.h>
+#include <nanogui/animatorGroup.h>

@@ -32,42 +32,6 @@ std::string strval = "A string";
 test_enum enumval = Item2;
 Color colval(0.5f, 0.5f, 0.7f, 1.f);
 
-enum class Axis
-{
-  eX,
-  eY
-};
-
-int getter(Window* window, Axis axis)
-{
-  Eigen::Vector2i pos = window->position();
-  if (axis == Axis::eX)
-  {
-    return pos.x();
-  }
-  else if (axis == Axis::eY)
-  {
-    return pos.y();
-  }
-  
-  return -1;
-}
-
-void setter(int value, Window* window, Axis axis)
-{
-  Eigen::Vector2i pos = window->position();
-  if (axis == Axis::eX)
-  {
-    Eigen::Vector2i newPos(value, pos.y());
-    window->setPosition(newPos);
-  }
-  else if (axis == Axis::eY)
-  {
-    Eigen::Vector2i newPos(pos.x(), value);
-    window->setPosition(newPos);
-  }
-}
-
 int main(int /* argc */, char ** /* argv */) {
     nanogui::init();
 
@@ -114,9 +78,38 @@ int main(int /* argc */, char ** /* argv */) {
              });
 
         gui->addGroup("Other widgets");
-        gui->addButton("A button", []()
+        gui->addButton("Press for begin animation", []()
         {
           AnimationManager::startAnimation();
+          std::cout << "Button pressed." << std::endl;
+        });
+
+        FormHelper* gui2 = new FormHelper(screen);
+        ref<Window> window2 = gui2->addWindow(Eigen::Vector2i(200, 10), "Form helper example 2");
+        gui2->addGroup("Basic types");
+        gui2->addVariable("bool", bvar);
+        gui2->addVariable("string", strval);
+
+        gui2->addGroup("Validating fields");
+        gui2->addVariable("int", ivar)->setSpinnable(true);
+        gui2->addVariable("float", fvar);
+        gui2->addVariable("double", dvar)->setSpinnable(true);
+
+        gui2->addGroup("Complex types");
+        gui2->addVariable("Enumeration", enumval, enabled)
+           ->setItems({"Item 1", "Item 2", "Item 3"});
+        gui2->addVariable("Color", colval)
+           ->setFinalCallback([](const Color &c) {
+                 std::cout << "ColorPicker Final Callback: ["
+                           << c.r() << ", "
+                           << c.g() << ", "
+                           << c.b() << ", "
+                           << c.w() << "]" << std::endl;
+             });
+
+        gui2->addGroup("Other widgets");
+        gui2->addButton("A button", []()
+        {
           std::cout << "Button pressed." << std::endl;
         });
 
@@ -131,7 +124,7 @@ int main(int /* argc */, char ** /* argv */) {
         animator->mGetterFunc = std::bind(&getter, window.get(), Axis::eX);
         animator->mSetterFunc = std::bind(&setter, std::placeholders::_1, window.get(), Axis::eX);*/
 
-        auto animator = std::make_shared<AnimatorStep<int>>();
+        /*auto animator = std::make_shared<AnimatorStep<int>>();
 
         CalculatorParams<int> step1;
         CalculatorParams<int> step2;
@@ -148,8 +141,26 @@ int main(int /* argc */, char ** /* argv */) {
 
         animator->addStep(step1);
         animator->addStep(step2);
-        animator->mGetterFunc = std::bind(&getter, window.get(), Axis::eX);
-        animator->mSetterFunc = std::bind(&setter, std::placeholders::_1, window.get(), Axis::eX);
+        animator->mGetterFunc = std::bind(&nanogui::getter, window.get(), Axis::eX);
+        animator->mSetterFunc = std::bind(&nanogui::setter, std::placeholders::_1, window.get(), Axis::eX);*/
+
+        auto animator = std::make_shared<AnimatorGroup<int>>();
+
+        std::chrono::milliseconds m(1000);
+
+        CalculatorParams<int> anim1;
+        CalculatorParams<int> anim2;
+
+        anim1.startValue = 0;
+        anim1.endValue = 500;
+        anim1.duration = m;
+
+        anim2.startValue = 200;
+        anim2.endValue = 700;
+        anim2.duration = m;
+
+        animator->addAnimation(window, anim1);
+        animator->addAnimation(window2, anim2);
 
         AnimationManager::Instance().addAnimator(animator);
 
