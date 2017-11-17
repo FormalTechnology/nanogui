@@ -408,11 +408,18 @@ if(NANOGUI_BUILD_EXAMPLE)
   add_executable(example3      src/example3.cpp)
   add_executable(example4      src/example4.cpp)
   add_executable(example_icons src/example_icons.cpp)
+  add_executable(exampleAnimation src/example_animation.cpp)
+  add_executable(exampleAnimationStep src/example_animationStep.cpp)
+  add_executable(exampleAnimationGroup src/example_animationGroup.cpp)
+
   target_link_libraries(example1      nanogui ${NANOGUI_EXTRA_LIBS})
   target_link_libraries(example2      nanogui ${NANOGUI_EXTRA_LIBS})
   target_link_libraries(example3      nanogui ${NANOGUI_EXTRA_LIBS})
   target_link_libraries(example4      nanogui ${NANOGUI_EXTRA_LIBS})
   target_link_libraries(example_icons nanogui ${NANOGUI_EXTRA_LIBS})
+  target_link_libraries(exampleAnimation nanogui ${NANOGUI_EXTRA_LIBS})
+  target_link_libraries(exampleAnimationStep nanogui ${NANOGUI_EXTRA_LIBS})
+  target_link_libraries(exampleAnimationGroup nanogui ${NANOGUI_EXTRA_LIBS})
 
   # Copy icons for example application
   file(COPY resources/icons DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
