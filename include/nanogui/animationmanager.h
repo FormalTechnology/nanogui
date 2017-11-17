@@ -27,7 +27,7 @@ public:
     static AnimationManager& Instance();
 
     static void addAnimator(const std::shared_ptr<IAnimatorBase> animator);
-    static void deleteAnimator();
+    static void deleteAnimator(const std::shared_ptr<IAnimatorBase> animator);
 
     static void startAnimation();
     static void stopAnimation();
