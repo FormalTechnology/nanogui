@@ -9,26 +9,26 @@
     BSD-style license that can be found in the LICENSE.txt file.
 */
 
-#include <nanogui/calculator.h>
+#include <nanogui/evaluator.h>
 #include <nanogui/animator.h>
 #include <nanogui/animationmanager.h>
 
 NAMESPACE_BEGIN(nanogui)
 
 template <typename T>
-Calculator<T>::Calculator()
+Evaluator<T>::Evaluator()
 {
     init();
 }
 
 template <typename T>
-Calculator<T>::Calculator(const CalculatorParams<T>& params)
+Evaluator<T>::Evaluator(const EvaluatorParams<T>& params)
 {
-  setCalculatorParams(params);
+  setEvaluatorParams(params);
 }
 
 template <typename T>
-void Calculator<T>::setCalculatorParams(const CalculatorParams<T>& params)
+void Evaluator<T>::setEvaluatorParams(const EvaluatorParams<T>& params)
 {
     mParams = params;
     
@@ -36,20 +36,20 @@ void Calculator<T>::setCalculatorParams(const CalculatorParams<T>& params)
 }
 
 template <typename T>
-CalculatorParams<T>& Calculator<T>::getCalculatorParams()
+EvaluatorParams<T>& Evaluator<T>::getEvaluatorParams()
 {
   return mParams;
 }
 
 template <typename T>
-void Calculator<T>::init()
+void Evaluator<T>::init()
 {
     mAccumulateTime = 0;
     mTimeOut = 0;
 }
 
 template  <typename T>
-T Calculator<T>::calculate(const T currentValue)
+T Evaluator<T>::evaluate(const T currentValue)
 {
     T value = 0;
 
@@ -72,13 +72,13 @@ T Calculator<T>::calculate(const T currentValue)
 }
 
 template <typename T>
-unsigned int Calculator<T>::getTimeOut()
+unsigned int Evaluator<T>::getTimeOut()
 {
     return mTimeOut;
 }
 
 template <typename T>
-void Calculator<T>::setTimeOut(unsigned int timeOut)
+void Evaluator<T>::setTimeOut(unsigned int timeOut)
 {
     mTimeOut = timeOut;
 }

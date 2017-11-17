@@ -41,7 +41,7 @@ public:
     void animate();
     void start();
 
-    void addStep(CalculatorParams<T> step);
+    void addStep(EvaluatorParams<T> step);
 
     std::function<T()> mGetterFunc;
     std::function<void(T)> mSetterFunc;
@@ -49,7 +49,7 @@ public:
 private:
 
     Animator<T> mAnimator;
-    std::vector<CalculatorParams<T>> mStepParamsList;
+    std::vector<EvaluatorParams<T>> mStepParamsList;
     unsigned int mNextIndex;
 };
 

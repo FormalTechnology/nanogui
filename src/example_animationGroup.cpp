@@ -120,8 +120,8 @@ int main(int /* argc */, char ** /* argv */) {
 
         std::chrono::milliseconds m(1000);
 
-        CalculatorParams<int> anim1;
-        CalculatorParams<int> anim2;
+        EvaluatorParams<int> anim1;
+        EvaluatorParams<int> anim2;
 
         anim1.startValue = 0;
         anim1.endValue = 500;

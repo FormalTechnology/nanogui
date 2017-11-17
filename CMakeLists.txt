@@ -340,7 +340,7 @@ add_library(nanogui-obj OBJECT
   include/nanogui/serializer/sparse.h
   src/serializer.cpp
   include/nanogui/animator.h src/animator.tpp
-  include/nanogui/calculator.h src/calculator.tpp
+  include/nanogui/evaluator.h src/evaluator.tpp
   include/nanogui/types.h
   include/nanogui/animationmanager.h src/animationmanager.cpp
   include/nanogui/timer.h src/timer.cpp

@@ -20,8 +20,8 @@ NAMESPACE_BEGIN(nanogui)
 template <typename T>
 struct AnimationGroupParams
 {
-    CalculatorParams<T> mParams;
-    Calculator<T> mCalc;
+    EvaluatorParams<T> mParams;
+    Evaluator<T> mCalc;
     std::function<T()> mGetter;
     std::function<void(T)> mSetter;
 };
@@ -50,7 +50,7 @@ public:
     void animate();
     void start();
 
-    void addAnimation(Widget* widget, CalculatorParams<T> params);
+    void addAnimation(Widget* widget, EvaluatorParams<T> params);
 
 private:
 

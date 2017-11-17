@@ -87,7 +87,7 @@ void AnimatorStep<T>::animate()
 }
 
 template <typename T>
-void AnimatorStep<T>::addStep(CalculatorParams<T> step)
+void AnimatorStep<T>::addStep(EvaluatorParams<T> step)
 {
     mStepParamsList.push_back(step);
 }

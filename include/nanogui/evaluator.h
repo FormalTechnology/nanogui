@@ -17,7 +17,7 @@ NAMESPACE_BEGIN(nanogui)
 class IAnimatorBase;
 
 template <typename T>
-struct CalculatorParams
+struct EvaluatorParams
 {
   T startValue;
   T endValue;
@@ -26,17 +26,17 @@ struct CalculatorParams
 };
 
 template <typename T>
-class Calculator
+class Evaluator
 {
 public:
 
-    Calculator();
-    Calculator(const CalculatorParams<T>& params);
+    Evaluator();
+    Evaluator(const EvaluatorParams<T>& params);
     
-    void setCalculatorParams(const CalculatorParams<T>& params);
-    CalculatorParams<T>& getCalculatorParams();
-    
-    T calculate(const T currentValue);
+    void setEvaluatorParams(const EvaluatorParams<T>& params);
+    EvaluatorParams<T>& getEvaluatorParams();
+
+    T evaluate(const T currentValue);
 
     unsigned int getTimeOut();
     void setTimeOut(unsigned int timeOut);
@@ -46,11 +46,11 @@ private:
     unsigned int mAccumulateTime;
     unsigned int mTimeOut;
 
-    CalculatorParams<T> mParams;
+    EvaluatorParams<T> mParams;
     
     void init();
 };
 
 NAMESPACE_END(nanogui)
 
-#include "../../src/calculator.tpp"
+#include "../../src/evaluator.tpp"

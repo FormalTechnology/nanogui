@@ -24,7 +24,7 @@
 #include <functional>
 
 #include <nanogui/widget.h>
-#include <nanogui/calculator.h>
+#include <nanogui/evaluator.h>
 #include <nanogui/types.h>
 
 NAMESPACE_BEGIN(nanogui)
@@ -80,8 +80,8 @@ public:
 
 private:
 
-    CalculatorParams<T> mParams;
-    Calculator<T> mCalc;
+    EvaluatorParams<T> mParams;
+    Evaluator<T> mCalc;
     bool mAnimationFinished;
 };
 

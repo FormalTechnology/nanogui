@@ -36,7 +36,7 @@ template <typename T>
 void Animator<T>::start()
 {
     mAnimationFinished = false;
-    mCalc.setCalculatorParams(mParams);
+    mCalc.setEvaluatorParams(mParams);
     mCalc.setTimeOut(AnimationManager::getTimeOut());
 }
 
@@ -72,7 +72,7 @@ void Animator<T>::animate()
         return;
     }
 
-    auto temp = mCalc.calculate(mGetterFunc());
+    auto temp = mCalc.evaluate(mGetterFunc());
     if (temp == mParams.endValue)
     {
         mAnimationFinished = true;

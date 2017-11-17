@@ -66,7 +66,7 @@ void AnimatorGroup<T>::start()
 {
     for (auto& item : mAnimationList)
     {
-        item.mCalc.setCalculatorParams(item.mParams);
+        item.mCalc.setEvaluatorParams(item.mParams);
         item.mCalc.setTimeOut(AnimationManager::getTimeOut());
     }
 }
@@ -103,13 +103,13 @@ void AnimatorGroup<T>::animate()
             continue;
         }
 
-        auto temp = item.mCalc.calculate(item.mGetter());
+        auto temp = item.mCalc.evaluate(item.mGetter());
         item.mSetter(temp);
     }
 }
 
 template <typename T>
-void AnimatorGroup<T>::addAnimation(Widget* widget, CalculatorParams<T> params)
+void AnimatorGroup<T>::addAnimation(Widget* widget, EvaluatorParams<T> params)
 {
     AnimationGroupParams<T> animParams;
     animParams.mParams = params;

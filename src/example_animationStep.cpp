@@ -118,8 +118,8 @@ int main(int /* argc */, char ** /* argv */) {
 
         auto animator = std::make_shared<AnimatorStep<int>>();
 
-        CalculatorParams<int> step1;
-        CalculatorParams<int> step2;
+        EvaluatorParams<int> step1;
+        EvaluatorParams<int> step2;
 
         step1.startValue = 0;
         step1.endValue = 500;
