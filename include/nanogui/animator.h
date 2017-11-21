@@ -22,6 +22,7 @@
 
 #include <memory>
 #include <functional>
+#include <chrono>
 
 #include <nanogui/widget.h>
 #include <nanogui/evaluator.h>
@@ -83,6 +84,8 @@ private:
     EvaluatorParams<T> mParams;
     Evaluator<T> mCalc;
     bool mAnimationFinished;
+
+    std::chrono::system_clock::time_point mStartTime;
 };
 
 NAMESPACE_END(nanogui)

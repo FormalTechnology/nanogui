@@ -18,7 +18,6 @@ NAMESPACE_BEGIN(nanogui)
 template <typename T>
 Evaluator<T>::Evaluator()
 {
-    init();
 }
 
 template <typename T>
@@ -31,8 +30,6 @@ template <typename T>
 void Evaluator<T>::setEvaluatorParams(const EvaluatorParams<T>& params)
 {
     mParams = params;
-    
-    init();
 }
 
 template <typename T>
@@ -41,46 +38,38 @@ EvaluatorParams<T>& Evaluator<T>::getEvaluatorParams()
   return mParams;
 }
 
-template <typename T>
-void Evaluator<T>::init()
-{
-    mAccumulateTime = 0;
-    mTimeOut = 0;
-}
-
 template  <typename T>
-T Evaluator<T>::evaluate(const T currentValue)
+T Evaluator<T>::evaluate(const T currentValue, const std::chrono::system_clock::time_point& startTime)
 {
-    T value = 0;
-
-    if (mAccumulateTime >= mParams.duration.count())
-    {
-        return  currentValue;
-    }
+    T value{};
+    std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
 
     switch (mParams.curve) {
     case types::EasingCurveType::Linear:
 
-        mAccumulateTime += mTimeOut;
+        value = mParams.startValue + ((mParams.endValue - mParams.startValue) * (((currentTime - startTime).count() / 1000) / (double)mParams.duration.count()));
 
-        value = mParams.startValue + ((mParams.endValue - mParams.startValue) * (mAccumulateTime / (double)mParams.duration.count()));
+        bool inverse = (mParams.endValue - mParams.startValue) < 0;
+
+        if (!inverse)
+        {
+            if (value >= mParams.endValue)
+            {
+                return  mParams.endValue;
+            }
+        }
+        else
+        {
+            if (value <= mParams.endValue)
+            {
+                return  mParams.endValue;
+            }
+        }
 
         break;
     }
 
     return  value;
-}
-
-template <typename T>
-unsigned int Evaluator<T>::getTimeOut()
-{
-    return mTimeOut;
-}
-
-template <typename T>
-void Evaluator<T>::setTimeOut(unsigned int timeOut)
-{
-    mTimeOut = timeOut;
 }
 
 NAMESPACE_END(nanogui)

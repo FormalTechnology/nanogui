@@ -84,35 +84,6 @@ int main(int /* argc */, char ** /* argv */) {
           std::cout << "Button pressed." << std::endl;
         });
 
-        FormHelper* gui2 = new FormHelper(screen);
-        ref<Window> window2 = gui2->addWindow(Eigen::Vector2i(200, 10), "Form helper example 2");
-        gui2->addGroup("Basic types");
-        gui2->addVariable("bool", bvar);
-        gui2->addVariable("string", strval);
-
-        gui2->addGroup("Validating fields");
-        gui2->addVariable("int", ivar)->setSpinnable(true);
-        gui2->addVariable("float", fvar);
-        gui2->addVariable("double", dvar)->setSpinnable(true);
-
-        gui2->addGroup("Complex types");
-        gui2->addVariable("Enumeration", enumval, enabled)
-           ->setItems({"Item 1", "Item 2", "Item 3"});
-        gui2->addVariable("Color", colval)
-           ->setFinalCallback([](const Color &c) {
-                 std::cout << "ColorPicker Final Callback: ["
-                           << c.r() << ", "
-                           << c.g() << ", "
-                           << c.b() << ", "
-                           << c.w() << "]" << std::endl;
-             });
-
-        gui2->addGroup("Other widgets");
-        gui2->addButton("A button", []()
-        {
-          std::cout << "Button pressed." << std::endl;
-        });
-
         screen->setVisible(true);
         screen->performLayout();
 
@@ -123,6 +94,7 @@ int main(int /* argc */, char ** /* argv */) {
 
         step1.startValue = 0;
         step1.endValue = 500;
+        step1.curve = types::EasingCurveType::Linear;
 
         std::chrono::milliseconds m(1000);
         step1.duration = m;
@@ -130,6 +102,7 @@ int main(int /* argc */, char ** /* argv */) {
         step2.startValue = 500;
         step2.endValue = 0;
         step2.duration = m;
+        step1.curve = types::EasingCurveType::Linear;
 
         animator->addStep(step1);
         animator->addStep(step2);

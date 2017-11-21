@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <chrono>
+
 #include <nanogui/widget.h>
 #include <nanogui/types.h>
 
@@ -36,19 +38,11 @@ public:
     void setEvaluatorParams(const EvaluatorParams<T>& params);
     EvaluatorParams<T>& getEvaluatorParams();
 
-    T evaluate(const T currentValue);
-
-    unsigned int getTimeOut();
-    void setTimeOut(unsigned int timeOut);
+    T evaluate(const T currentValue, const std::chrono::system_clock::time_point& startTime);
 
 private:
 
-    unsigned int mAccumulateTime;
-    unsigned int mTimeOut;
-
     EvaluatorParams<T> mParams;
-    
-    void init();
 };
 
 NAMESPACE_END(nanogui)

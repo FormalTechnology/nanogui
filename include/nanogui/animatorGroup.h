@@ -10,6 +10,7 @@
 #pragma once
 
 #include <vector>
+#include <chrono>
 
 #include <nanogui/widget.h>
 #include <nanogui/animator.h>
@@ -55,6 +56,7 @@ public:
 private:
 
     std::vector<AnimationGroupParams<T>> mAnimationList;
+    std::chrono::system_clock::time_point mStartTime;
 };
 
 NAMESPACE_END(nanogui)

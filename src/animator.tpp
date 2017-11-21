@@ -35,9 +35,10 @@ Animator<T>::~Animator()
 template <typename T>
 void Animator<T>::start()
 {
+    mStartTime = std::chrono::system_clock::now();
+
     mAnimationFinished = false;
     mCalc.setEvaluatorParams(mParams);
-    mCalc.setTimeOut(AnimationManager::getTimeOut());
 }
 
 template <typename T>
@@ -72,7 +73,7 @@ void Animator<T>::animate()
         return;
     }
 
-    auto temp = mCalc.evaluate(mGetterFunc());
+    auto temp = mCalc.evaluate(mGetterFunc(), mStartTime);
     if (temp == mParams.endValue)
     {
         mAnimationFinished = true;

@@ -64,10 +64,11 @@ AnimatorGroup<T>::~AnimatorGroup()
 template <typename T>
 void AnimatorGroup<T>::start()
 {
+    mStartTime = std::chrono::system_clock::now();
+
     for (auto& item : mAnimationList)
     {
         item.mCalc.setEvaluatorParams(item.mParams);
-        item.mCalc.setTimeOut(AnimationManager::getTimeOut());
     }
 }
 
@@ -103,7 +104,7 @@ void AnimatorGroup<T>::animate()
             continue;
         }
 
-        auto temp = item.mCalc.evaluate(item.mGetter());
+        auto temp = item.mCalc.evaluate(item.mGetter(), mStartTime);
         item.mSetter(temp);
     }
 }
