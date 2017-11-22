@@ -16,8 +16,6 @@
 
 NAMESPACE_BEGIN(nanogui)
 
-class IAnimatorBase;
-
 template <typename T>
 struct EvaluatorParams
 {
@@ -45,6 +43,61 @@ private:
     EvaluatorParams<T> mParams;
 };
 
-NAMESPACE_END(nanogui)
+template <typename T>
+Evaluator<T>::Evaluator()
+{
+}
 
-#include "../../src/evaluator.tpp"
+template <typename T>
+Evaluator<T>::Evaluator(const EvaluatorParams<T>& params)
+{
+  setEvaluatorParams(params);
+}
+
+template <typename T>
+void Evaluator<T>::setEvaluatorParams(const EvaluatorParams<T>& params)
+{
+    mParams = params;
+}
+
+template <typename T>
+EvaluatorParams<T>& Evaluator<T>::getEvaluatorParams()
+{
+  return mParams;
+}
+
+template  <typename T>
+T Evaluator<T>::evaluate(const T currentValue, const std::chrono::system_clock::time_point& startTime)
+{
+    T value{};
+    std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
+
+    switch (mParams.curve) {
+    case types::EasingCurveType::Linear:
+
+        value = mParams.startValue + ((mParams.endValue - mParams.startValue) * (((currentTime - startTime).count() / 1000) / (double)mParams.duration.count()));
+
+        bool inverse = (mParams.endValue - mParams.startValue) < 0;
+
+        if (!inverse)
+        {
+            if (value >= mParams.endValue)
+            {
+                return  mParams.endValue;
+            }
+        }
+        else
+        {
+            if (value <= mParams.endValue)
+            {
+                return  mParams.endValue;
+            }
+        }
+
+        break;
+    }
+
+    return  value;
+}
+
+NAMESPACE_END(nanogui)

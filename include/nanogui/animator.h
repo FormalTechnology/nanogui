@@ -88,6 +88,109 @@ private:
     std::chrono::system_clock::time_point mStartTime;
 };
 
-NAMESPACE_END(nanogui)
+template <typename T>
+Animator<T>::Animator()
+{
+  mParams.startValue = 0;
+  mParams.endValue = 0;
+  mParams.curve = types::EasingCurveType::Linear;
 
-#include "../../src/animator.tpp"
+  mAnimationFinished = false;
+
+  setDuration(0);
+}
+
+template <typename T>
+Animator<T>::~Animator()
+{
+
+}
+
+template <typename T>
+void Animator<T>::start()
+{
+    mStartTime = std::chrono::system_clock::now();
+
+    mAnimationFinished = false;
+    mCalc.setEvaluatorParams(mParams);
+}
+
+template <typename T>
+void Animator<T>::setStartValue(T value)
+{
+    mParams.startValue = value;
+}
+
+template <typename T>
+T Animator<T>::getStartValue()
+{
+    return mParams.startValue;
+}
+
+template <typename T>
+void Animator<T>::setEndValue(T value)
+{
+    mParams.endValue = value;
+}
+
+template <typename T>
+T Animator<T>::getEndValue()
+{
+    return mParams.endValue;
+}
+
+template <typename T>
+void Animator<T>::animate()
+{
+    if (!mSetterFunc || !mGetterFunc)
+    {
+        return;
+    }
+
+    auto temp = mCalc.evaluate(mGetterFunc(), mStartTime);
+    if (temp == mParams.endValue)
+    {
+        mAnimationFinished = true;
+    }
+
+    mSetterFunc(temp);
+}
+
+template <typename T>
+bool Animator<T>::isFinished()
+{
+    return mAnimationFinished;
+}
+
+template <typename T>
+void Animator<T>::setDuration(types::Duration_t value)
+{
+    mParams.duration = value;
+}
+
+template <typename T>
+types::Duration_t Animator<T>::getDuration()
+{
+    return mParams.duration;
+}
+
+template <typename T>
+void Animator<T>::setDuration(unsigned int value)
+{
+  std::chrono::milliseconds m(value);
+  mParams.duration = std::chrono::duration_cast<types::Duration_t>(m);
+}
+
+template <typename T>
+void Animator<T>::setCurveType(types::EasingCurveType type)
+{
+    mParams.curve = type;
+}
+
+template <typename T>
+types::EasingCurveType Animator<T>::getCurveType()
+{
+    return  mParams.curve;
+}
+
+NAMESPACE_END(nanogui)

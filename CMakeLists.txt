@@ -339,13 +339,13 @@ add_library(nanogui-obj OBJECT
   include/nanogui/serializer/opengl.h
   include/nanogui/serializer/sparse.h
   src/serializer.cpp
-  include/nanogui/animator.h src/animator.tpp
-  include/nanogui/evaluator.h src/evaluator.tpp
+  include/nanogui/animator.h
+  include/nanogui/evaluator.h
   include/nanogui/types.h
   include/nanogui/animationmanager.h src/animationmanager.cpp
   include/nanogui/timer.h src/timer.cpp
-  include/nanogui/animatorStep.h src/animatorStep.tpp
-  include/nanogui/animatorGroup.h src/animatorGroup.tpp
+  include/nanogui/animatorStep.h
+  include/nanogui/animatorGroup.h
 )
 
 add_library(nanogui ${NANOGUI_LIBRARY_TYPE}
