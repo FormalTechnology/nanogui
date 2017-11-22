@@ -14,58 +14,45 @@
 
 NAMESPACE_BEGIN(nanogui)
 
-AnimationManager& AnimationManager::Instance()
-{
+AnimationManager& AnimationManager::Instance() {
     static AnimationManager manager;
     return manager;
 }
 
-void AnimationManager::addAnimator(const std::shared_ptr<IAnimatorBase> animator)
-{
+void AnimationManager::addAnimator(const std::shared_ptr<IAnimatorBase> animator) {
     Instance().mAnimatorList.push_back(animator);
 }
 
-void AnimationManager::deleteAnimator(const std::shared_ptr<IAnimatorBase> animator)
-{
+void AnimationManager::deleteAnimator(const std::shared_ptr<IAnimatorBase> animator) {
     auto iter = std::find(Instance().mAnimatorList.begin(), Instance().mAnimatorList.end(), animator);
-    if (iter != Instance().mAnimatorList.end())
-    {
+    if (iter != Instance().mAnimatorList.end()) {
         Instance().mAnimatorList.erase(iter);
     }
 }
 
-void AnimationManager::startAnimation()
-{
+void AnimationManager::startAnimation() {
     for (auto& item : Instance().mAnimatorList)
-    {
         item->start();
-    }
 
     auto& instance = Instance();
     instance.mTimer.start(std::chrono::milliseconds(Instance().mTimeOut), [&instance]{ instance.updateAnimators(); });
 }
 
-void AnimationManager::stopAnimation()
-{
+void AnimationManager::stopAnimation() {
     Instance().mTimer.stop();
     Instance().mAnimatorList.clear();
 }
 
-void AnimationManager::updateAnimators()
-{
+void AnimationManager::updateAnimators() {
     for (auto& item : Instance().mAnimatorList)
-    {
         item->animate();
-    }
 }
 
-unsigned int AnimationManager::getTimeOut()
-{
+unsigned int AnimationManager::getTimeOut() {
     return Instance().mTimeOut;
 }
 
-void AnimationManager::setTimeOut(unsigned int timeOut)
-{
+void AnimationManager::setTimeOut(unsigned int timeOut) {
     Instance().mTimeOut = timeOut;
 }
 

@@ -13,47 +13,35 @@
 
 NAMESPACE_BEGIN(nanogui)
 
-Timer::Timer()
-{
+Timer::Timer() {
     mRunning = false;
 }
 
-Timer::~Timer()
-{
+Timer::~Timer() {
     stop();
 }
 
-void Timer::start(const Interval& interval, const Timeout& timeout)
-{
+void Timer::start(const Interval& interval, const Timeout& timeout) {
     if (mRunning)
-    {
         return;
-    }
 
     mRunning = true;
 
-    mWorkThread = std::thread([=]()
-    {
-        while (mRunning == true)
-        {
+    mWorkThread = std::thread([=]() {
+        while (mRunning == true) {
             std::this_thread::sleep_for(interval);
             timeout();
         }
     });
 }
 
-void Timer::stop()
-{
+void Timer::stop() {
     if (!mRunning)
-    {
         return;
-    }
 
     mRunning = false;
     if (mWorkThread.joinable())
-    {
         mWorkThread.join();
-    }
 }
 
 NAMESPACE_END(nanogui)
