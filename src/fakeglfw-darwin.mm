@@ -48,13 +48,13 @@ int translateFlags(uint32_t flags)
 {
     int mods = 0;
 
-    if (flags & NSShiftKeyMask)
+    if (flags & NSEventModifierFlagShift)
         mods |= GLFW_MOD_SHIFT;
-    if (flags & NSControlKeyMask)
+    if (flags & NSEventModifierFlagControl)
         mods |= GLFW_MOD_CONTROL;
-    if (flags & NSAlternateKeyMask)
+    if (flags & NSEventModifierFlagOption)
         mods |= GLFW_MOD_ALT;
-    if (flags & NSCommandKeyMask)
+    if (flags & NSEventModifierFlagCommand)
         mods |= GLFW_MOD_SUPER;
 
     return mods;
