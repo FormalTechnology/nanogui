@@ -20,7 +20,9 @@
 #include <iostream>
 
 #if defined(_WIN32)
+#ifndef NOMINMAX
 #  define NOMINMAX
+#endif
 #  undef APIENTRY
 
 #  define WIN32_LEAN_AND_MEAN
